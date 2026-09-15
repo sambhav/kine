@@ -1,5 +1,7 @@
 # Actual Kine PostgreSQL benchmarks
 
+Measured conclusions and all run records: [RESULTS.md](RESULTS.md).
+
 This runs the real Kine CLI/application in separate child processes and measures
 etcd v3 gRPC calls over TCP loopback. The baseline uses the original read/append update path;
 the candidate opts into conditional INSERT ... SELECT with
@@ -65,9 +67,11 @@ three-trial comparisons. `Kine PostgreSQL experiments` runs three independent
 Actions jobs so comparisons within each suite share a runner:
 
 - **writes:** 32 concurrent RPCs, CAS / Put / mixed, original and atomic updates,
-  SQL pool limits 8/16/32/unlimited, and four/seven indexes. All configurations
+  SQL pool limits 8/16/32/unlimited, and four/seven indexes. Full runs also
+  include baseline-plus-pool-8 and atomic-plus-pool-8-plus-four-indexes. All configurations
   pass API correctness checks. Every measured write is watched and verified;
-  WAL and database statistics are recorded around each trial.
+  WAL and database statistics are recorded around each trial. Three concurrent
+  GET waves warm connections before timing; no writes occur during warmup.
 - **reads:** count, historical count and a 500-key paginated list, with the
   experimental count rewrite off/on and four/seven indexes. Full fixtures have
   20,000 keys × 15 versions. Fresh and vacuumed snapshots share the same seed;
@@ -90,3 +94,13 @@ in explicitly selected variants through `KINE_BENCH_DISTINCT_COUNT=1`.
 The four-index fixture removes only `kine_name_index`, `kine_name_id_index`, and
 `kine_prev_revision_index` after Kine startup. Required uniqueness, primary key,
 list and id/deleted indexes remain. No production schema migration is applied.
+
+The initial screening exposed a baseline full-keyspace list/count inconsistency
+(`Get("\x00", WithFromKey(), WithKeysOnly())` returned no keys while count returned hundreds).
+All-key count checks therefore use the original grouped SQL revision-log query
+as their oracle. Bounded current, historical, deleted and recreated counts are
+still checked through the API. The failed screening is retained in `results/`.
+
+Use `[kine:experiments:confirm]` to repeat the focused pool-16 comparison.
+It includes baseline/atomic with default pooling, baseline with pool 16, atomic
+with pools 8/16, and atomic with pool 16 plus four indexes.

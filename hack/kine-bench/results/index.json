@@ -1,0 +1,104 @@
+{
+  "date": "2026-09-15",
+  "records": [
+    {
+      "file": "atomic-api-full.json",
+      "sha256": "3bcea6d34360450a3363e2970e3f6b5aa68dfcb0536d515cb6d5dd669fc4e620",
+      "bytes": 26773,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34924580591",
+      "commit": "fd8d674ceeb10b1d9019756ac151a0aa37cea7db",
+      "completed": true,
+      "conclusion": "success"
+    },
+    {
+      "file": "experiments-confirm-writes.json",
+      "sha256": "89788f6bb926301a5b55d02c44c88b0dda2c72bba2f7089f82c917fd4f504027",
+      "bytes": 93781,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34928141536",
+      "commit": "e125b4d4dc89a88d1c13daaed7651d6963c30226",
+      "completed": true,
+      "conclusion": "success"
+    },
+    {
+      "file": "experiments-full-churn.json",
+      "sha256": "5e80a6317ddcf5c36fe64f87e844e0be0dce9f0f4719073ce74b44bb29e3dc8d",
+      "bytes": 815191,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34927803554",
+      "commit": "1b047c2836d8f9acff7e6f2306989a6283f75cec",
+      "completed": true,
+      "conclusion": "success"
+    },
+    {
+      "file": "experiments-full-reads.json",
+      "sha256": "7c99293d99dd8829d9a8af4ba8fa98e590715a5b38f958ce07d3f4438b6c2b95",
+      "bytes": 58724,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34927803554",
+      "commit": "1b047c2836d8f9acff7e6f2306989a6283f75cec",
+      "completed": true,
+      "conclusion": "success"
+    },
+    {
+      "file": "experiments-full-writes.json",
+      "sha256": "191885a810e0e4fb5edadb7f2ab87700d54b9b09db00f4eac6bf8fee2264d42c",
+      "bytes": 140413,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34927803554",
+      "commit": "1b047c2836d8f9acff7e6f2306989a6283f75cec",
+      "completed": true,
+      "conclusion": "success"
+    },
+    {
+      "file": "experiments-quick1-churn.json",
+      "sha256": "75a0b40ab8c163926f0c8e850128f5dffad8d903094116d346208618ee865499",
+      "bytes": 88106,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34927426850",
+      "commit": "264df3cb0cc14603bafe301ab78b9c3f4a0e29a9",
+      "completed": true,
+      "conclusion": "success"
+    },
+    {
+      "file": "experiments-quick1-reads.json",
+      "sha256": "dbb5070eea4402824d50bd08c78054a6a0c78cf906043bd877462b0b73eb8380",
+      "bytes": 1079,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34927426850",
+      "commit": "264df3cb0cc14603bafe301ab78b9c3f4a0e29a9",
+      "completed": false,
+      "conclusion": "failure"
+    },
+    {
+      "file": "experiments-quick1-writes.json",
+      "sha256": "dbf9dde30abd93cd1613fd7fc7c0fc543d465562b0a4fcfcbc6fd6e484797bba",
+      "bytes": 1079,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34927426850",
+      "commit": "264df3cb0cc14603bafe301ab78b9c3f4a0e29a9",
+      "completed": false,
+      "conclusion": "failure"
+    },
+    {
+      "file": "experiments-quick2-churn.json",
+      "sha256": "f47adef8b4168c0aec64e3b0c09ee665bb1e1dba555a670fa4f55f482f47323e",
+      "bytes": 98829,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34927587000",
+      "commit": "b630862d050c965090c20e5651f9444aa1921880",
+      "completed": true,
+      "conclusion": "success"
+    },
+    {
+      "file": "experiments-quick2-reads.json",
+      "sha256": "a6327bfa7357aa6bb8b0ff4a0b0896afd53acb1d60dca500256391b24a9ec28c",
+      "bytes": 20788,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34927587000",
+      "commit": "b630862d050c965090c20e5651f9444aa1921880",
+      "completed": true,
+      "conclusion": "success"
+    },
+    {
+      "file": "experiments-quick2-writes.json",
+      "sha256": "8c5d26733498e221da3acc2d0b9c494a6b4cedc2a002b5aa326b1687ef806d5a",
+      "bytes": 44754,
+      "run_url": "https://github.com/sambhav/kine/actions/runs/34927587000",
+      "commit": "b630862d050c965090c20e5651f9444aa1921880",
+      "completed": true,
+      "conclusion": "success"
+    }
+  ]
+}

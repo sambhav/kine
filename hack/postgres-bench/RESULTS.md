@@ -1,5 +1,8 @@
 # Native PostgreSQL benchmark results — 2026-09-15
 
+This document records the earlier SQL-only phase. Subsequent real Kine API
+results and recommendations are in [../kine-bench/RESULTS.md](../kine-bench/RESULTS.md).
+
 Baseline SQL: Kine `35f4319798cf3543e49f86c775a1f8c5c23b1e80`. Candidates are isolated SQL prototypes; production driver code is unchanged.
 
 All runs used native PostgreSQL 16.15 on GitHub's Ubuntu 24.04 runners (4 vCPUs, approximately 16 GiB RAM). `fsync`, `synchronous_commit`, and `full_page_writes` remained on. These are SQL-level measurements, not end-to-end Kine gRPC throughput or watch-delivery latency.

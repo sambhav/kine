@@ -1,0 +1,35 @@
+{
+  "run_url": "https://github.com/sambhav/kine/actions/runs/34927426850",
+  "job_url": "https://github.com/sambhav/kine/actions/runs/34927426850/job/104248331775",
+  "conclusion": "failure",
+  "job_seconds": 35,
+  "commit": "264df3cb0cc14603bafe301ab78b9c3f4a0e29a9",
+  "completed": false,
+  "cpus": 4,
+  "environment": {
+    "autovacuum": "on",
+    "checkpoint_timeout": "5min",
+    "fsync": "on",
+    "full_page_writes": "on",
+    "max_wal_size": "1GB",
+    "server_version": "16.15 (Ubuntu 16.15-1.pgdg24.04+2)",
+    "shared_buffers": "128MB",
+    "synchronous_commit": "on"
+  },
+  "go": "go1.26.5",
+  "keys": 512,
+  "profile": "quick",
+  "seconds": 1.710551132,
+  "suite": "writes",
+  "trials": 1,
+  "versions": 5,
+  "machine": {
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "cpus": 4,
+    "runner_image": "20260907.300.1",
+    "kernel": "6.17.0-1022-azure"
+  },
+  "summary": [],
+  "rows": [],
+  "failure": "Baseline all-key listing returned no keys while its count was nonzero; the following harness revision uses the original grouped revision-log query as oracle."
+}

@@ -5,7 +5,7 @@ import statistics
 from pathlib import Path
 
 r = json.loads(Path('experiments-results.json').read_text())
-r['machine'] = {'cpu': next((s.split(':', 1)[1].strip() for s in Path('/proc/cpuinfo').read_text().splitlines() if s.startswith('model name')), platform.processor()), 'cpus': os.cpu_count(), 'runner_image': os.environ.get('ImageVersion'), 'kernel': platform.release()}
+r.setdefault('machine', {'cpu': next((s.split(':', 1)[1].strip() for s in Path('/proc/cpuinfo').read_text().splitlines() if s.startswith('model name')), platform.processor()), 'cpus': os.cpu_count(), 'runner_image': os.environ.get('ImageVersion'), 'kernel': platform.release()})
 Path('experiments-results.json').write_text(json.dumps(r, indent=2))
 print('EXPERIMENT_META ' + json.dumps({k: v for k, v in r.items() if k != 'rows'}))
 rows = r['rows']

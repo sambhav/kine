@@ -1,13 +1,14 @@
 # PostgreSQL optimization experiments
 
-Native measurements and conclusions: [RESULTS.md](RESULTS.md).
+Native SQL measurements and conclusions: [RESULTS.md](RESULTS.md).
+Subsequent actual Kine API results: [../kine-bench/RESULTS.md](../kine-bench/RESULTS.md).
 
 Baseline: Kine `35f4319798cf3543e49f86c775a1f8c5c23b1e80`.
 
 This harness compares the baseline SQL with narrow PostgreSQL `DISTINCT ON`
 counts, removing three overlapping indexes, and a one-statement successful CAS
-update prototype. All candidates are isolated in this harness; this branch does
-not change production driver behavior.
+update prototype. Candidates in this SQL harness are isolated prototypes; the subsequent API
+harness has separate opt-in driver experiments.
 
 ## Fast GitHub Actions loop
 

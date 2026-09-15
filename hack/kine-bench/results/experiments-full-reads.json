@@ -1,0 +1,2426 @@
+{
+  "run_url": "https://github.com/sambhav/kine/actions/runs/34927803554",
+  "job_url": "https://github.com/sambhav/kine/actions/runs/34927803554/job/104249464413",
+  "conclusion": "success",
+  "job_seconds": 225,
+  "commit": "1b047c2836d8f9acff7e6f2306989a6283f75cec",
+  "completed": true,
+  "cpus": 4,
+  "environment": {
+    "autovacuum": "on",
+    "checkpoint_timeout": "5min",
+    "fsync": "on",
+    "full_page_writes": "on",
+    "max_wal_size": "1GB",
+    "server_version": "16.15 (Ubuntu 16.15-1.pgdg24.04+2)",
+    "shared_buffers": "128MB",
+    "synchronous_commit": "on"
+  },
+  "go": "go1.26.5",
+  "keys": 20000,
+  "profile": "full",
+  "seconds": 186.957299264,
+  "suite": "reads",
+  "trials": 3,
+  "versions": 15,
+  "machine": {
+    "cpu": "AMD EPYC 7763 64-Core Processor",
+    "cpus": 4,
+    "runner_image": "20260907.300.1",
+    "kernel": "6.17.0-1022-azure"
+  },
+  "summary": [
+    {
+      "variant": "seven",
+      "phase": "fresh",
+      "workload": "count",
+      "p50_ms": 237.208503
+    },
+    {
+      "variant": "seven",
+      "phase": "fresh",
+      "workload": "count-history",
+      "p50_ms": 212.907267
+    },
+    {
+      "variant": "seven",
+      "phase": "fresh",
+      "workload": "list-page",
+      "p50_ms": 483.078898
+    },
+    {
+      "variant": "seven",
+      "phase": "vacuumed",
+      "workload": "count",
+      "p50_ms": 70.203348
+    },
+    {
+      "variant": "seven",
+      "phase": "vacuumed",
+      "workload": "count-history",
+      "p50_ms": 69.401213
+    },
+    {
+      "variant": "seven",
+      "phase": "vacuumed",
+      "workload": "list-page",
+      "p50_ms": 77.630784
+    },
+    {
+      "variant": "four",
+      "phase": "fresh",
+      "workload": "count",
+      "p50_ms": 255.858913
+    },
+    {
+      "variant": "four",
+      "phase": "fresh",
+      "workload": "count-history",
+      "p50_ms": 227.787461
+    },
+    {
+      "variant": "four",
+      "phase": "fresh",
+      "workload": "list-page",
+      "p50_ms": 484.020376
+    },
+    {
+      "variant": "four",
+      "phase": "vacuumed",
+      "workload": "count",
+      "p50_ms": 71.564904
+    },
+    {
+      "variant": "four",
+      "phase": "vacuumed",
+      "workload": "count-history",
+      "p50_ms": 71.523699
+    },
+    {
+      "variant": "four",
+      "phase": "vacuumed",
+      "workload": "list-page",
+      "p50_ms": 81.502864
+    },
+    {
+      "variant": "seven-count",
+      "phase": "fresh",
+      "workload": "count",
+      "p50_ms": 320.092842
+    },
+    {
+      "variant": "seven-count",
+      "phase": "fresh",
+      "workload": "count-history",
+      "p50_ms": 298.844006
+    },
+    {
+      "variant": "seven-count",
+      "phase": "fresh",
+      "workload": "list-page",
+      "p50_ms": 551.587719
+    },
+    {
+      "variant": "seven-count",
+      "phase": "vacuumed",
+      "workload": "count",
+      "p50_ms": 45.647048
+    },
+    {
+      "variant": "seven-count",
+      "phase": "vacuumed",
+      "workload": "count-history",
+      "p50_ms": 46.078917
+    },
+    {
+      "variant": "seven-count",
+      "phase": "vacuumed",
+      "workload": "list-page",
+      "p50_ms": 53.832601
+    },
+    {
+      "variant": "four-count",
+      "phase": "fresh",
+      "workload": "count",
+      "p50_ms": 257.359137
+    },
+    {
+      "variant": "four-count",
+      "phase": "fresh",
+      "workload": "count-history",
+      "p50_ms": 299.999009
+    },
+    {
+      "variant": "four-count",
+      "phase": "fresh",
+      "workload": "list-page",
+      "p50_ms": 553.908527
+    },
+    {
+      "variant": "four-count",
+      "phase": "vacuumed",
+      "workload": "count",
+      "p50_ms": 44.795584
+    },
+    {
+      "variant": "four-count",
+      "phase": "vacuumed",
+      "workload": "count-history",
+      "p50_ms": 45.520435
+    },
+    {
+      "variant": "four-count",
+      "phase": "vacuumed",
+      "workload": "list-page",
+      "p50_ms": 53.975516
+    },
+    {
+      "variant": "four",
+      "workload": "compaction",
+      "ms": 1294.529719,
+      "rows_removed": 260000,
+      "wal_bytes": 301191032
+    },
+    {
+      "variant": "seven",
+      "workload": "compaction",
+      "ms": 1348.055214,
+      "rows_removed": 260000,
+      "wal_bytes": 303331864
+    }
+  ],
+  "rows": [
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 5,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "0/3926E420"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 5,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "0/39262668"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 234.324819,
+          "p95_ms": 400.217154,
+          "samples_ms": [
+            400.217154,
+            271.004644,
+            234.324819,
+            231.660128,
+            231.135359
+          ]
+        },
+        "count-history": {
+          "p50_ms": 223.866229,
+          "p95_ms": 230.927652,
+          "samples_ms": [
+            230.927652,
+            226.953515,
+            223.866229,
+            223.196661,
+            223.48366
+          ]
+        },
+        "list-page": {
+          "p50_ms": 479.143751,
+          "p95_ms": 529.659078,
+          "samples_ms": [
+            456.693871,
+            464.677586,
+            479.143751,
+            525.847788,
+            529.659078
+          ]
+        }
+      },
+      "trial": 0,
+      "variant": {
+        "name": "seven",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 48568
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 7,
+        "checkpoints_timed": 0,
+        "dead_tuples": 181199,
+        "heap_bytes": 340418560,
+        "index_bytes": 76652544,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 40005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "0/635E8A58"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 7,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "0/51491F68"
+      },
+      "compaction": {
+        "after": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 7,
+          "checkpoints_timed": 0,
+          "dead_tuples": 181199,
+          "heap_bytes": 340418560,
+          "index_bytes": 76652544,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 40005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41536,
+          "wal_lsn": "0/635E8A58"
+        },
+        "before": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 7,
+          "checkpoints_timed": 0,
+          "dead_tuples": 0,
+          "heap_bytes": 340418560,
+          "index_bytes": 76636160,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 300005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41536,
+          "wal_lsn": "0/514A1040"
+        },
+        "ms": 1349.473764,
+        "reached": 280002,
+        "target": 280002,
+        "wal_bytes": 303331864
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 70.335016,
+          "p95_ms": 108.59104,
+          "samples_ms": [
+            108.59104,
+            107.643894,
+            69.5091,
+            69.536259,
+            70.335016
+          ]
+        },
+        "count-history": {
+          "p50_ms": 69.401213,
+          "p95_ms": 71.504111,
+          "samples_ms": [
+            70.005664,
+            71.504111,
+            69.401213,
+            68.902791,
+            69.359606
+          ]
+        },
+        "list-page": {
+          "p50_ms": 78.693322,
+          "p95_ms": 120.6974,
+          "samples_ms": [
+            120.120059,
+            120.6974,
+            78.693322,
+            77.924375,
+            77.003264
+          ]
+        }
+      },
+      "trial": 0,
+      "variant": {
+        "name": "seven",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 303393520
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 9,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "0/7B580988"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 9,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "0/7B57B058"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 255.858913,
+          "p95_ms": 282.44153,
+          "samples_ms": [
+            271.65995,
+            282.44153,
+            255.858913,
+            249.953648,
+            246.984042
+          ]
+        },
+        "count-history": {
+          "p50_ms": 225.768176,
+          "p95_ms": 227.860113,
+          "samples_ms": [
+            227.703207,
+            222.614459,
+            227.860113,
+            225.768176,
+            220.7411
+          ]
+        },
+        "list-page": {
+          "p50_ms": 484.020376,
+          "p95_ms": 543.095424,
+          "samples_ms": [
+            484.020376,
+            474.130811,
+            451.517528,
+            542.33964,
+            543.095424
+          ]
+        }
+      },
+      "trial": 0,
+      "variant": {
+        "name": "four",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 22832
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 11,
+        "checkpoints_timed": 0,
+        "dead_tuples": 184202,
+        "heap_bytes": 340418560,
+        "index_bytes": 51027968,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 40005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "0/A56EA740"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 11,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "0/937A4D88"
+      },
+      "compaction": {
+        "after": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 11,
+          "checkpoints_timed": 0,
+          "dead_tuples": 184202,
+          "heap_bytes": 340418560,
+          "index_bytes": 51027968,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 40005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41539,
+          "wal_lsn": "0/A56EA740"
+        },
+        "before": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 11,
+          "checkpoints_timed": 0,
+          "dead_tuples": 0,
+          "heap_bytes": 340418560,
+          "index_bytes": 51011584,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 300005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41539,
+          "wal_lsn": "0/937AD7C8"
+        },
+        "ms": 1294.529719,
+        "reached": 280002,
+        "target": 280002,
+        "wal_bytes": 301191032
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 71.564904,
+          "p95_ms": 96.548878,
+          "samples_ms": [
+            96.548878,
+            96.081184,
+            71.564904,
+            71.35124,
+            71.246999
+          ]
+        },
+        "count-history": {
+          "p50_ms": 71.523699,
+          "p95_ms": 71.69788,
+          "samples_ms": [
+            71.403203,
+            71.404672,
+            71.69788,
+            71.523699,
+            71.594951
+          ]
+        },
+        "list-page": {
+          "p50_ms": 81.516248,
+          "p95_ms": 111.219588,
+          "samples_ms": [
+            111.219588,
+            110.193654,
+            81.516248,
+            80.494785,
+            80.520707
+          ]
+        }
+      },
+      "trial": 0,
+      "variant": {
+        "name": "four",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 301226424
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 13,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "0/BD688600"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 13,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "0/BD67C848"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 325.169544,
+          "p95_ms": 327.483236,
+          "samples_ms": [
+            253.577441,
+            255.503998,
+            325.169544,
+            326.894201,
+            327.483236
+          ]
+        },
+        "count-history": {
+          "p50_ms": 298.543646,
+          "p95_ms": 304.430321,
+          "samples_ms": [
+            299.426103,
+            298.543646,
+            304.430321,
+            298.391117,
+            298.336199
+          ]
+        },
+        "list-page": {
+          "p50_ms": 551.587719,
+          "p95_ms": 624.912066,
+          "samples_ms": [
+            466.652532,
+            468.036686,
+            551.587719,
+            624.912066,
+            618.68873
+          ]
+        }
+      },
+      "trial": 0,
+      "variant": {
+        "name": "seven-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 48568
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 15,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 76636160,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "0/D58BB820"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 15,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "0/D58AC760"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 45.63524,
+          "p95_ms": 47.231245,
+          "samples_ms": [
+            45.106001,
+            44.864515,
+            45.63524,
+            46.090901,
+            47.231245
+          ]
+        },
+        "count-history": {
+          "p50_ms": 45.81661,
+          "p95_ms": 46.003088,
+          "samples_ms": [
+            45.612924,
+            45.308618,
+            45.81661,
+            46.003088,
+            45.877303
+          ]
+        },
+        "list-page": {
+          "p50_ms": 53.865129,
+          "p95_ms": 54.927372,
+          "samples_ms": [
+            53.310019,
+            53.865129,
+            53.027237,
+            54.927372,
+            54.892297
+          ]
+        }
+      },
+      "trial": 0,
+      "variant": {
+        "name": "seven-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 61632
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 17,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "0/ED853D10"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 17,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "0/ED84E3F8"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 257.359137,
+          "p95_ms": 347.723601,
+          "samples_ms": [
+            257.359137,
+            256.921897,
+            254.660516,
+            345.094317,
+            347.723601
+          ]
+        },
+        "count-history": {
+          "p50_ms": 299.999009,
+          "p95_ms": 304.8236,
+          "samples_ms": [
+            299.999009,
+            304.8236,
+            298.557511,
+            300.644853,
+            299.549078
+          ]
+        },
+        "list-page": {
+          "p50_ms": 553.908527,
+          "p95_ms": 636.233927,
+          "samples_ms": [
+            465.577194,
+            466.887681,
+            553.908527,
+            633.567896,
+            636.233927
+          ]
+        }
+      },
+      "trial": 0,
+      "variant": {
+        "name": "four-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 22808
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 19,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 51011584,
+        "inserted": 2,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "1/5A81178"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 19,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "1/5A78738"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 44.795584,
+          "p95_ms": 45.36922,
+          "samples_ms": [
+            44.948823,
+            44.72212,
+            44.524915,
+            44.795584,
+            45.36922
+          ]
+        },
+        "count-history": {
+          "p50_ms": 45.520435,
+          "p95_ms": 46.184326,
+          "samples_ms": [
+            45.738532,
+            46.184326,
+            45.225609,
+            45.520435,
+            45.063124
+          ]
+        },
+        "list-page": {
+          "p50_ms": 53.975516,
+          "p95_ms": 54.634687,
+          "samples_ms": [
+            53.613006,
+            54.065222,
+            54.634687,
+            53.975516,
+            53.563271
+          ]
+        }
+      },
+      "trial": 0,
+      "variant": {
+        "name": "four-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 35392
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 21,
+        "checkpoints_timed": 0,
+        "dead_tuples": 180198,
+        "heap_bytes": 340418560,
+        "index_bytes": 51027968,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 40005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "1/2FBEB790"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 21,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "1/1DCA5D00"
+      },
+      "compaction": {
+        "after": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 21,
+          "checkpoints_timed": 0,
+          "dead_tuples": 180198,
+          "heap_bytes": 340418560,
+          "index_bytes": 51027968,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 40005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41539,
+          "wal_lsn": "1/2FBEB790"
+        },
+        "before": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 21,
+          "checkpoints_timed": 0,
+          "dead_tuples": 0,
+          "heap_bytes": 340418560,
+          "index_bytes": 51011584,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 300005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41539,
+          "wal_lsn": "1/1DCAE758"
+        },
+        "ms": 1314.487057,
+        "reached": 280002,
+        "target": 280002,
+        "wal_bytes": 301191224
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 71.32604,
+          "p95_ms": 96.848124,
+          "samples_ms": [
+            96.807488,
+            96.848124,
+            71.262591,
+            71.32604,
+            71.14089
+          ]
+        },
+        "count-history": {
+          "p50_ms": 71.797993,
+          "p95_ms": 72.094759,
+          "samples_ms": [
+            71.922607,
+            72.094759,
+            71.548774,
+            71.654809,
+            71.797993
+          ]
+        },
+        "list-page": {
+          "p50_ms": 81.205854,
+          "p95_ms": 111.995603,
+          "samples_ms": [
+            111.995603,
+            111.84143,
+            80.948616,
+            81.205854,
+            80.476777
+          ]
+        }
+      },
+      "trial": 1,
+      "variant": {
+        "name": "four",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 301226640
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 23,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "1/47B840A8"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 23,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "1/47B7E7B0"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 255.588358,
+          "p95_ms": 258.913482,
+          "samples_ms": [
+            258.913482,
+            251.041512,
+            255.588358,
+            257.264321,
+            254.874596
+          ]
+        },
+        "count-history": {
+          "p50_ms": 227.787461,
+          "p95_ms": 230.363389,
+          "samples_ms": [
+            230.363389,
+            222.989391,
+            230.010502,
+            225.914145,
+            227.787461
+          ]
+        },
+        "list-page": {
+          "p50_ms": 479.697455,
+          "p95_ms": 552.747069,
+          "samples_ms": [
+            475.498318,
+            479.697455,
+            465.946995,
+            542.997227,
+            552.747069
+          ]
+        }
+      },
+      "trial": 1,
+      "variant": {
+        "name": "four",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 22776
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 25,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 76636160,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "1/5FDB7990"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 25,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "1/5FDA88D0"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 46.131267,
+          "p95_ms": 46.453596,
+          "samples_ms": [
+            46.453596,
+            46.131267,
+            46.393848,
+            45.51459,
+            46.034796
+          ]
+        },
+        "count-history": {
+          "p50_ms": 46.078917,
+          "p95_ms": 46.314649,
+          "samples_ms": [
+            45.548074,
+            46.314649,
+            45.474117,
+            46.108593,
+            46.078917
+          ]
+        },
+        "list-page": {
+          "p50_ms": 53.628592,
+          "p95_ms": 55.561808,
+          "samples_ms": [
+            54.52406,
+            55.561808,
+            53.628592,
+            52.648236,
+            53.610939
+          ]
+        }
+      },
+      "trial": 1,
+      "variant": {
+        "name": "seven-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 61632
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 27,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "1/77D56270"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 27,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "1/77D4A4F0"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 259.93968,
+          "p95_ms": 337.125672,
+          "samples_ms": [
+            259.136388,
+            259.93968,
+            255.613175,
+            336.171384,
+            337.125672
+          ]
+        },
+        "count-history": {
+          "p50_ms": 307.499963,
+          "p95_ms": 308.017084,
+          "samples_ms": [
+            307.499963,
+            305.54714,
+            307.537502,
+            308.017084,
+            305.755885
+          ]
+        },
+        "list-page": {
+          "p50_ms": 556.750928,
+          "p95_ms": 636.156396,
+          "samples_ms": [
+            483.954809,
+            471.286278,
+            556.750928,
+            626.800054,
+            636.156396
+          ]
+        }
+      },
+      "trial": 1,
+      "variant": {
+        "name": "seven-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 48512
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 29,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 51011584,
+        "inserted": 2,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "1/8FF83D70"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 29,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "1/8FF7B330"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 45.64139,
+          "p95_ms": 46.310744,
+          "samples_ms": [
+            45.64139,
+            45.40226,
+            46.310744,
+            45.913047,
+            45.591726
+          ]
+        },
+        "count-history": {
+          "p50_ms": 45.727455,
+          "p95_ms": 46.667173,
+          "samples_ms": [
+            45.594202,
+            46.257673,
+            46.667173,
+            45.727455,
+            45.604993
+          ]
+        },
+        "list-page": {
+          "p50_ms": 54.598354,
+          "p95_ms": 55.265615,
+          "samples_ms": [
+            54.945593,
+            53.488036,
+            54.324016,
+            55.265615,
+            54.598354
+          ]
+        }
+      },
+      "trial": 1,
+      "variant": {
+        "name": "four-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 35392
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 31,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "1/A7F5AAE8"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 31,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "1/A7F551F0"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 257.860073,
+          "p95_ms": 347.274932,
+          "samples_ms": [
+            256.877734,
+            257.334415,
+            257.860073,
+            344.762375,
+            347.274932
+          ]
+        },
+        "count-history": {
+          "p50_ms": 299.459458,
+          "p95_ms": 300.653396,
+          "samples_ms": [
+            300.653396,
+            299.267542,
+            298.535914,
+            300.404207,
+            299.459458
+          ]
+        },
+        "list-page": {
+          "p50_ms": 557.865553,
+          "p95_ms": 642.717574,
+          "samples_ms": [
+            468.797889,
+            472.355922,
+            557.865553,
+            641.826223,
+            642.717574
+          ]
+        }
+      },
+      "trial": 1,
+      "variant": {
+        "name": "four-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 22776
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 33,
+        "checkpoints_timed": 0,
+        "dead_tuples": 186204,
+        "heap_bytes": 340418560,
+        "index_bytes": 76652544,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 40005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "1/D22D64B0"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 33,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "1/C017F988"
+      },
+      "compaction": {
+        "after": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 33,
+          "checkpoints_timed": 0,
+          "dead_tuples": 186204,
+          "heap_bytes": 340418560,
+          "index_bytes": 76652544,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 40005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41536,
+          "wal_lsn": "1/D22D64B0"
+        },
+        "before": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 33,
+          "checkpoints_timed": 0,
+          "dead_tuples": 0,
+          "heap_bytes": 340418560,
+          "index_bytes": 76636160,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 300005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41536,
+          "wal_lsn": "1/C018EA60"
+        },
+        "ms": 1289.258763,
+        "reached": 280002,
+        "target": 280002,
+        "wal_bytes": 303331920
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 70.203348,
+          "p95_ms": 107.035057,
+          "samples_ms": [
+            105.960701,
+            107.035057,
+            70.203348,
+            69.63095,
+            69.041758
+          ]
+        },
+        "count-history": {
+          "p50_ms": 69.058367,
+          "p95_ms": 69.188936,
+          "samples_ms": [
+            68.750917,
+            69.109812,
+            69.058367,
+            69.188936,
+            68.904279
+          ]
+        },
+        "list-page": {
+          "p50_ms": 77.630784,
+          "p95_ms": 119.026237,
+          "samples_ms": [
+            118.017473,
+            119.026237,
+            77.499463,
+            77.630784,
+            76.424103
+          ]
+        }
+      },
+      "trial": 1,
+      "variant": {
+        "name": "seven",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 303393576
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 35,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "1/EA275300"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 35,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "1/EA269580"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 238.596643,
+          "p95_ms": 257.680554,
+          "samples_ms": [
+            251.335505,
+            257.680554,
+            235.127672,
+            230.42884,
+            238.596643
+          ]
+        },
+        "count-history": {
+          "p50_ms": 212.907267,
+          "p95_ms": 221.462525,
+          "samples_ms": [
+            221.462525,
+            212.907267,
+            211.701834,
+            211.688293,
+            213.062124
+          ]
+        },
+        "list-page": {
+          "p50_ms": 489.488353,
+          "p95_ms": 538.48406,
+          "samples_ms": [
+            468.782173,
+            489.488353,
+            452.238441,
+            527.785744,
+            538.48406
+          ]
+        }
+      },
+      "trial": 1,
+      "variant": {
+        "name": "seven",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 48512
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 37,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "2/2214318"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 37,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "2/2208560"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 320.092842,
+          "p95_ms": 323.062433,
+          "samples_ms": [
+            254.062529,
+            255.802752,
+            323.062433,
+            321.908189,
+            320.092842
+          ]
+        },
+        "count-history": {
+          "p50_ms": 298.844006,
+          "p95_ms": 301.818927,
+          "samples_ms": [
+            297.384835,
+            300.093612,
+            301.818927,
+            298.844006,
+            295.553032
+          ]
+        },
+        "list-page": {
+          "p50_ms": 548.471593,
+          "p95_ms": 625.774189,
+          "samples_ms": [
+            472.368183,
+            474.962026,
+            548.471593,
+            625.774189,
+            621.156863
+          ]
+        }
+      },
+      "trial": 2,
+      "variant": {
+        "name": "seven-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 48568
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 39,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 76636160,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "2/1A448670"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 39,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "2/1A439598"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 45.647048,
+          "p95_ms": 47.194816,
+          "samples_ms": [
+            44.768222,
+            44.711023,
+            45.647048,
+            47.194816,
+            46.865055
+          ]
+        },
+        "count-history": {
+          "p50_ms": 46.164479,
+          "p95_ms": 46.337341,
+          "samples_ms": [
+            46.337341,
+            46.328297,
+            46.164479,
+            46.151292,
+            46.097798
+          ]
+        },
+        "list-page": {
+          "p50_ms": 53.832601,
+          "p95_ms": 55.699528,
+          "samples_ms": [
+            53.563997,
+            53.832601,
+            53.730233,
+            55.699528,
+            54.709487
+          ]
+        }
+      },
+      "trial": 2,
+      "variant": {
+        "name": "seven-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 61656
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 41,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "2/323E1CA0"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 41,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "2/323DC388"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 256.052877,
+          "p95_ms": 347.368492,
+          "samples_ms": [
+            255.164905,
+            255.910269,
+            256.052877,
+            345.862284,
+            347.368492
+          ]
+        },
+        "count-history": {
+          "p50_ms": 301.169141,
+          "p95_ms": 307.080743,
+          "samples_ms": [
+            301.169141,
+            307.080743,
+            300.578315,
+            304.527997,
+            301.100124
+          ]
+        },
+        "list-page": {
+          "p50_ms": 545.434958,
+          "p95_ms": 646.464893,
+          "samples_ms": [
+            462.9077,
+            461.593108,
+            545.434958,
+            623.539687,
+            646.464893
+          ]
+        }
+      },
+      "trial": 2,
+      "variant": {
+        "name": "four-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 22808
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 43,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 51011584,
+        "inserted": 1,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "2/4A6101F8"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 43,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "2/4A6077A0"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 44.536962,
+          "p95_ms": 45.642619,
+          "samples_ms": [
+            43.856152,
+            44.033036,
+            44.536962,
+            45.642619,
+            45.023427
+          ]
+        },
+        "count-history": {
+          "p50_ms": 44.682091,
+          "p95_ms": 44.981253,
+          "samples_ms": [
+            44.702366,
+            44.622246,
+            44.621002,
+            44.981253,
+            44.682091
+          ]
+        },
+        "list-page": {
+          "p50_ms": 52.248241,
+          "p95_ms": 52.893342,
+          "samples_ms": [
+            52.893342,
+            52.517379,
+            52.248241,
+            51.439708,
+            51.169845
+          ]
+        }
+      },
+      "trial": 2,
+      "variant": {
+        "name": "four-count",
+        "mode": "atomic-count",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 35416
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 45,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "2/625AF7B8"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 45,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "2/625A3A00"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 237.208503,
+          "p95_ms": 253.794375,
+          "samples_ms": [
+            253.794375,
+            247.83131,
+            237.208503,
+            218.864851,
+            230.803738
+          ]
+        },
+        "count-history": {
+          "p50_ms": 210.832356,
+          "p95_ms": 220.389352,
+          "samples_ms": [
+            218.028415,
+            220.389352,
+            210.292326,
+            210.832356,
+            209.674599
+          ]
+        },
+        "list-page": {
+          "p50_ms": 483.078898,
+          "p95_ms": 534.894236,
+          "samples_ms": [
+            446.639597,
+            483.078898,
+            466.984935,
+            534.894236,
+            514.303545
+          ]
+        }
+      },
+      "trial": 2,
+      "variant": {
+        "name": "seven",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 48568
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 47,
+        "checkpoints_timed": 0,
+        "dead_tuples": 179197,
+        "heap_bytes": 340418560,
+        "index_bytes": 76652544,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 40005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "2/8C92BAC0"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 47,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 76636160,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41536,
+        "wal_lsn": "2/7A7D4FE8"
+      },
+      "compaction": {
+        "after": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 47,
+          "checkpoints_timed": 0,
+          "dead_tuples": 179197,
+          "heap_bytes": 340418560,
+          "index_bytes": 76652544,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 40005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41536,
+          "wal_lsn": "2/8C92BAC0"
+        },
+        "before": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 47,
+          "checkpoints_timed": 0,
+          "dead_tuples": 0,
+          "heap_bytes": 340418560,
+          "index_bytes": 76636160,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 300005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41536,
+          "wal_lsn": "2/7A7E40C0"
+        },
+        "ms": 1348.055214,
+        "reached": 280002,
+        "target": 280002,
+        "wal_bytes": 303331840
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 69.712138,
+          "p95_ms": 109.24975,
+          "samples_ms": [
+            106.694334,
+            109.24975,
+            69.503528,
+            69.712138,
+            69.453895
+          ]
+        },
+        "count-history": {
+          "p50_ms": 69.953615,
+          "p95_ms": 70.092627,
+          "samples_ms": [
+            69.334049,
+            69.991526,
+            69.953615,
+            70.092627,
+            69.881938
+          ]
+        },
+        "list-page": {
+          "p50_ms": 77.504521,
+          "p95_ms": 118.316998,
+          "samples_ms": [
+            118.137964,
+            118.316998,
+            76.996902,
+            77.504521,
+            77.016739
+          ]
+        }
+      },
+      "trial": 2,
+      "variant": {
+        "name": "seven",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 7,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 303393496
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 49,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 300005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "2/A48C56C8"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 49,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340402176,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 0,
+        "wal_lsn": "2/A48BFD98"
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "fresh",
+      "reads": {
+        "count": {
+          "p50_ms": 257.63604,
+          "p95_ms": 310.135469,
+          "samples_ms": [
+            262.114199,
+            310.135469,
+            257.63604,
+            252.122194,
+            250.049957
+          ]
+        },
+        "count-history": {
+          "p50_ms": 231.526703,
+          "p95_ms": 233.172,
+          "samples_ms": [
+            231.526703,
+            232.043671,
+            233.172,
+            227.947979,
+            222.474958
+          ]
+        },
+        "list-page": {
+          "p50_ms": 488.091354,
+          "p95_ms": 552.717583,
+          "samples_ms": [
+            488.091354,
+            473.227713,
+            461.775623,
+            541.95758,
+            552.717583
+          ]
+        }
+      },
+      "trial": 2,
+      "variant": {
+        "name": "four",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 22832
+    },
+    {
+      "after": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 51,
+        "checkpoints_timed": 0,
+        "dead_tuples": 161179,
+        "heap_bytes": 340418560,
+        "index_bytes": 51027968,
+        "inserted": 3,
+        "pages": 41539,
+        "rows": 40005,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "2/CEA310E0"
+      },
+      "before": {
+        "autoanalyze_count": 0,
+        "autovacuum_count": 0,
+        "checkpoints_requested": 51,
+        "checkpoints_timed": 0,
+        "dead_tuples": 0,
+        "heap_bytes": 340418560,
+        "index_bytes": 51011584,
+        "inserted": 0,
+        "pages": 41539,
+        "rows": 300002,
+        "table_options": [
+          "autovacuum_enabled=false"
+        ],
+        "visible_pages": 41539,
+        "wal_lsn": "2/BCAEB7A8"
+      },
+      "compaction": {
+        "after": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 51,
+          "checkpoints_timed": 0,
+          "dead_tuples": 161179,
+          "heap_bytes": 340418560,
+          "index_bytes": 51027968,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 40005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41539,
+          "wal_lsn": "2/CEA310E0"
+        },
+        "before": {
+          "autoanalyze_count": 0,
+          "autovacuum_count": 0,
+          "checkpoints_requested": 51,
+          "checkpoints_timed": 0,
+          "dead_tuples": 0,
+          "heap_bytes": 340418560,
+          "index_bytes": 51011584,
+          "inserted": 3,
+          "pages": 41539,
+          "rows": 300005,
+          "table_options": [
+            "autovacuum_enabled=false"
+          ],
+          "visible_pages": 41539,
+          "wal_lsn": "2/BCAF4200"
+        },
+        "ms": 1269.409977,
+        "reached": 280002,
+        "target": 280002,
+        "wal_bytes": 301190880
+      },
+      "count_checks": true,
+      "kind": "read",
+      "phase": "vacuumed",
+      "reads": {
+        "count": {
+          "p50_ms": 72.772178,
+          "p95_ms": 107.731297,
+          "samples_ms": [
+            107.533056,
+            107.731297,
+            71.466855,
+            72.772178,
+            72.475046
+          ]
+        },
+        "count-history": {
+          "p50_ms": 70.616472,
+          "p95_ms": 71.124089,
+          "samples_ms": [
+            70.590698,
+            70.696172,
+            71.124089,
+            70.525395,
+            70.616472
+          ]
+        },
+        "list-page": {
+          "p50_ms": 81.502864,
+          "p95_ms": 123.662231,
+          "samples_ms": [
+            121.708794,
+            123.662231,
+            81.502864,
+            79.647287,
+            79.07389
+          ]
+        }
+      },
+      "trial": 2,
+      "variant": {
+        "name": "four",
+        "mode": "atomic",
+        "max_open": 0,
+        "indexes": 4,
+        "eager_vacuum": false
+      },
+      "wal_bytes": 301226296
+    }
+  ]
+}
