@@ -179,6 +179,10 @@ func (e *experiment) writeExperiments() error {
 	variants := []variant{{Name: "baseline", Mode: "baseline", Indexes: 7}, {Name: "atomic", Mode: "atomic", Indexes: 7},
 		{Name: "pool8", Mode: "atomic", Pool: 8, Indexes: 7}, {Name: "pool16", Mode: "atomic", Pool: 16, Indexes: 7}, {Name: "pool32", Mode: "atomic", Pool: 32, Indexes: 7},
 		{Name: "four-indexes", Mode: "atomic", Indexes: 4}, {Name: "baseline-four-indexes", Mode: "baseline", Indexes: 4}}
+	if e.profile == "full" {
+		variants = append(variants, variant{Name: "baseline-pool8", Mode: "baseline", Pool: 8, Indexes: 7},
+			variant{Name: "pool8-four-indexes", Mode: "atomic", Pool: 8, Indexes: 4})
+	}
 	for _, v := range variants {
 		if err := e.trial(v, "checks", 0, func(p *process, db *sql.DB) (map[string]any, error) {
 			if err := correctness(p.client, databaseURL(e.base, e.seed+"_trial")); err != nil {

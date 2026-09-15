@@ -95,9 +95,21 @@ func measure(c *clientv3.Client, workload string, concurrency, ops int) (sample,
 		return worker + ((id/concurrency)%owned)*concurrency
 	}
 	// Warm connections without modifying the identical database fixture.
-	for i := 0; i < concurrency; i++ {
-		if _, err = c.Get(ctx, keys[i]); err != nil {
-			return sample{}, err
+	for round := 0; round < 3; round++ {
+		ready := make(chan error, concurrency)
+		start := make(chan struct{})
+		for i := 0; i < concurrency; i++ {
+			go func(i int) {
+				<-start
+				_, err := c.Get(ctx, keys[i])
+				ready <- err
+			}(i)
+		}
+		close(start)
+		for i := 0; i < concurrency; i++ {
+			if err := <-ready; err != nil {
+				return sample{}, err
+			}
 		}
 	}
 	isWrite := func(i int) bool { return workload != "mixed" || (i/concurrency)%2 == 1 }
