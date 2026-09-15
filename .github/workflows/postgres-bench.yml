@@ -10,6 +10,10 @@ on:
         type: choice
         options: [quick, full, load]
         default: quick
+      cache_fixture:
+        description: Restore/save the full logical fixture instead of regenerating
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -24,6 +28,7 @@ jobs:
     timeout-minutes: 10
     env:
       BENCH_PROFILE: ${{ inputs.profile || (contains(github.event.head_commit.message, '[bench:load]') && 'load' || contains(github.event.head_commit.message, '[bench:full]') && 'full' || 'quick') }}
+      BENCH_CACHE_FIXTURE: ${{ inputs.cache_fixture || contains(github.event.head_commit.message, '[bench:cache]') }}
       DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/kine_bench?sslmode=disable
       BENCH_OUTPUT: ${{ github.workspace }}/benchmark-results.json
       BENCH_FIXTURE_CACHE: ${{ github.workspace }}/.bench-fixtures
@@ -66,7 +71,7 @@ jobs:
         run: npm ci --ignore-scripts --omit=optional --no-audit --no-fund
 
       - name: Restore seed fixture
-        if: env.BENCH_PROFILE == 'full'
+        if: env.BENCH_PROFILE == 'full' && env.BENCH_CACHE_FIXTURE == 'true'
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: .bench-fixtures
@@ -81,7 +86,7 @@ jobs:
 
       - name: Benchmark baseline and candidates
         run: |
-          if [[ "$BENCH_PROFILE" != full ]]; then
+          if [[ "$BENCH_PROFILE" != full || "$BENCH_CACHE_FIXTURE" != true ]]; then
             unset BENCH_FIXTURE_CACHE
           fi
           node hack/postgres-bench/benchmark.mjs

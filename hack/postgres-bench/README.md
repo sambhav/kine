@@ -1,5 +1,7 @@
 # PostgreSQL optimization experiments
 
+Native measurements and conclusions: [RESULTS.md](RESULTS.md).
+
 Baseline: Kine `35f4319798cf3543e49f86c775a1f8c5c23b1e80`.
 
 This harness compares the baseline SQL with narrow PostgreSQL `DISTINCT ON`
@@ -31,9 +33,15 @@ trial, query plans, and runner details. Queue/runner provisioning time is outsid
 the benchmark and cannot be guaranteed to fit a one-minute budget.
 
 Node dependencies are cached by lockfile. Quick runs regenerate the 30,001-row fixture: measured generation and restore
-both took about 0.6 s, so skipping cache download is faster. For full runs, the
-immutable initial fixture is a compressed `pg_dump` archive cached by PostgreSQL major, profile, and the fixture
-source hash. A cache miss generates it; a hit restores it and refreshes planner
+both took about 0.6 s, so skipping cache download is faster. Full generation took
+6.28 s plus 1.74 s to dump; restoration took 9.38 s on another runner, so caching
+has not demonstrated a speed benefit for this synthetic data either. Full runs
+also regenerate by default. Opt into fixture caching with `[bench:full]
+[bench:cache]` in the commit message, or the manual `cache_fixture` input.
+
+The optional immutable initial fixture is a compressed `pg_dump` archive cached by PostgreSQL major, profile, and the fixture
+source hash. Both a cache miss/save and a cache hit/restore have been exercised
+successfully on the fork. A cache miss generates it; a hit restores it and refreshes planner
 statistics. Never cache a running PGDATA directory. Measured writes always start
 from reset fixtures; cache entries never contain a prior trial's mutated state.
 Logical restore rebuilds indexes, so compare candidates within each run rather
