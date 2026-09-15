@@ -8,7 +8,7 @@ on:
       profile:
         description: Benchmark size
         type: choice
-        options: [quick, full]
+        options: [quick, full, load]
         default: quick
 
 permissions:
@@ -23,7 +23,7 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     env:
-      BENCH_PROFILE: ${{ inputs.profile || (contains(github.event.head_commit.message, '[bench:full]') && 'full' || 'quick') }}
+      BENCH_PROFILE: ${{ inputs.profile || (contains(github.event.head_commit.message, '[bench:load]') && 'load' || contains(github.event.head_commit.message, '[bench:full]') && 'full' || 'quick') }}
       DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/kine_bench?sslmode=disable
       BENCH_OUTPUT: ${{ github.workspace }}/benchmark-results.json
       BENCH_FIXTURE_CACHE: ${{ github.workspace }}/.bench-fixtures
@@ -37,6 +37,13 @@ jobs:
             echo 'BENCH_WRITE_OPS=5000' >> "$GITHUB_ENV"
             echo 'BENCH_REPETITIONS=9' >> "$GITHUB_ENV"
             echo 'BENCH_TRIALS=5' >> "$GITHUB_ENV"
+          elif [[ "$BENCH_PROFILE" == load ]]; then
+            echo 'BENCH_KEYS=100' >> "$GITHUB_ENV"
+            echo 'BENCH_WRITE_OPS=20000' >> "$GITHUB_ENV"
+            echo 'BENCH_REPETITIONS=1' >> "$GITHUB_ENV"
+            echo 'BENCH_TRIALS=1' >> "$GITHUB_ENV"
+            echo 'BENCH_CONCURRENT_ONLY=1' >> "$GITHUB_ENV"
+            echo 'BENCH_CHECKPOINT=1' >> "$GITHUB_ENV"
           else
             echo 'BENCH_KEYS=2000' >> "$GITHUB_ENV"
             echo 'BENCH_WRITE_OPS=300' >> "$GITHUB_ENV"
@@ -74,7 +81,7 @@ jobs:
 
       - name: Benchmark baseline and candidates
         run: |
-          if [[ "$BENCH_PROFILE" == quick ]]; then
+          if [[ "$BENCH_PROFILE" != full ]]; then
             unset BENCH_FIXTURE_CACHE
           fi
           node hack/postgres-bench/benchmark.mjs

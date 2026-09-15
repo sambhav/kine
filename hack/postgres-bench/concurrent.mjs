@@ -16,6 +16,10 @@ export async function concurrentSuite({Client, q, resetWrites, getSQL, insertSQL
     if(!old||Number(old.id)!==rev)return 0;
     return Number((await c.query({name:'insert',text:insertSQL,values:[key,Number(old.created)===1?Number(old.id):Number(old.create_revision),rev,0,value]})).rows[0].id);
   };
+  const checkpointView=(await q("SELECT to_regclass('pg_catalog.pg_stat_checkpointer') IS NOT NULL present"))[0].present
+    ? 'pg_catalog.pg_stat_checkpointer' : 'pg_catalog.pg_stat_bgwriter';
+  const checkpointStats=async()=>(await q(`SELECT to_jsonb(s) stats FROM ${checkpointView} s`))[0].stats;
+  results.checkpoint_control=process.env.BENCH_CHECKPOINT==='1';
   results.concurrent=[];
   try {
     for(const indexes of [7,4]) {
@@ -54,6 +58,10 @@ export async function concurrentSuite({Client, q, resetWrites, getSQL, insertSQL
       const configs=trial%2?[[4,'atomic'],[4,'baseline'],[7,'atomic'],[7,'baseline']]:[[7,'baseline'],[7,'atomic'],[4,'baseline'],[4,'atomic']];
       for(const [indexes,mode] of configs) {
         await resetWrites(indexes);
+        const checkpointStart=performance.now();
+        if(process.env.BENCH_CHECKPOINT==='1')await q('CHECKPOINT');
+        const checkpointMs=performance.now()-checkpointStart;
+        const checkpointBefore=await checkpointStats();
         await Promise.all(clients.slice(0,concurrency).map(async c=>{
           for(let i=0;i<6;i++)assert.equal(await run(c,mode,'missing',-1,value),0);
         }));
@@ -82,7 +90,9 @@ export async function concurrentSuite({Client, q, resetWrites, getSQL, insertSQL
         latencies.sort((a,b)=>a-b);
         const row={concurrency,trial,indexes,mode,ops:writeOps,total_ms:ms,
           ops_per_second:writeOps/ms*1000,p50_ms:percentile(latencies,.5),
-          p95_ms:percentile(latencies,.95),p99_ms:percentile(latencies,.99),wal_bytes:wal};
+          p95_ms:percentile(latencies,.95),p99_ms:percentile(latencies,.99),max_ms:latencies.at(-1),wal_bytes:wal,
+          checkpoint_before_trial_ms:checkpointMs,checkpoint_before:checkpointBefore,
+          checkpoint_after:await checkpointStats()};
         results.concurrent.push(row);report('concurrent',row);
       }
     }

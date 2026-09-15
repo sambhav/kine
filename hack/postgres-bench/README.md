@@ -10,8 +10,11 @@ not change production driver behavior.
 ## Fast GitHub Actions loop
 
 Push to `perf/postgres-actions` in the fork to run the quick profile. Add
-`[bench:full]` to the push's final commit message for the larger profile. The
-workflow also supports manual dispatch with a `quick`/`full` input once GitHub
+`[bench:full]` to the push's final commit message for the larger profile.
+Use `[bench:load]` for a focused repeat with 8/32 clients, 20,000 updates per
+variant/trial, and an explicit checkpoint before each trial (outside timing).
+Checkpoint statistics and maximum latency are recorded to expose stalls. The
+workflow also supports manual dispatch with a `quick`/`full`/`load` input once GitHub
 registers it on the default branch. Re-run the benchmark job to compare a warm
 cache without another code change.
 

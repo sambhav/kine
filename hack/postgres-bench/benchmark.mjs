@@ -17,6 +17,7 @@ const repetitions = Number(process.env.BENCH_REPETITIONS || 9);
 const trials = Number(process.env.BENCH_TRIALS || 5);
 const benchmarkStart = performance.now();
 const fixtureCache = process.env.BENCH_FIXTURE_CACHE;
+const concurrentOnly=process.env.BENCH_CONCURRENT_ONLY==='1';
 assert(versions >= 9, 'the deletion/recreation fixture requires at least nine versions');
 for (const n of [keys, versions, writeOps, repetitions, trials]) assert(Number.isSafeInteger(n) && n > 0);
 let db;
@@ -153,11 +154,13 @@ if(process.env.BENCH_PHASE==='fresh-four'){
   results.finished=new Date().toISOString();results.total_ms=performance.now()-benchmarkStart;save();
   await q(`DROP SCHEMA kine_bench CASCADE`);await db.close();process.exit(0);
 }
+if(!concurrentOnly){
 await readSuite(7,'freshly-written');
 await q(`VACUUM (ANALYZE) kine`);
 await readSuite(7,'vacuumed');await size(7);
 for(const name of ['kine_name_index','kine_name_id_index','kine_prev_revision_index']) await q(`DROP INDEX ${name}`);
 await readSuite(4,'vacuumed');await size(4);
+}
 // Separate write fixture. Every measured trial starts from identical live keys.
 await q(`TRUNCATE kine RESTART IDENTITY`);
 const fixtureKeys=1000;
@@ -188,7 +191,7 @@ async function mutation(mode,key,rev,value){
 async function signature(){return (await q(`SELECT count(*) rows,md5(string_agg(
   row_to_json(kine)::text,E'\n' ORDER BY id)) digest FROM kine`))[0];}
 let expectedSignature;
-for(let trial=0;trial<trials;trial++) {
+for(let trial=0;trial<(concurrentOnly?0:trials);trial++) {
  const configs=trial%2?[[4,'atomic'],[4,'baseline'],[7,'atomic'],[7,'baseline']]:[[7,'baseline'],[7,'atomic'],[4,'baseline'],[4,'atomic']];
  for(const [indexes,mode] of configs){
   await resetWrites(indexes);
@@ -230,7 +233,7 @@ await q(`INSERT INTO kine(name,created,deleted,create_revision,prev_revision,lea
 const tombstone=Number((await q(`SELECT max(id) AS id FROM kine WHERE name='/registry/write/00000001'`))[0].id);
 assert.equal(await mutation('atomic','/registry/write/00000001',tombstone,Buffer.from('deleted')),0);
 results.correctness.mutation_checks=7;
-if(process.env.DATABASE_URL && process.env.BENCH_PROFILE==='full') {
+if(process.env.DATABASE_URL && ['full','load'].includes(process.env.BENCH_PROFILE)) {
  await concurrentSuite({Client:require('pg').Client,q,resetWrites,getSQL,insertSQL,atomicSQL,writeOps,report,results});
 }
 results.finished=new Date().toISOString();results.total_ms=performance.now()-benchmarkStart;save();
