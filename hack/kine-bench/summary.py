@@ -29,7 +29,9 @@ for (workload, clients), modes in groups.items():
     lines.append(f"| {workload} | {clients} | {base['ops_per_second']:.0f} | {candidate['ops_per_second']:.0f} | "
                  f"{row['speedup']:.2f}× | {base['p95_ms']:.3f} | {candidate['p95_ms']:.3f} | "
                  f"{base['watch_p95_ms']:.3f} | {candidate['watch_p95_ms']:.3f} |")
-lines += ['', 'Concurrent standalone Put is excluded: an earlier baseline run acknowledged a write without advancing its revision. The hot-key diagnostic is recorded separately.']
+lines += ['', 'Both modes include the same ordinary Put correctness fix: read current state and retry failed updates. '
+          'Baseline retains the original read/append update path; atomic uses conditional INSERT ... SELECT. '
+          'Concurrent Put and same-key Put conflicts are required correctness checks.']
 lines += ['- ' + warning for warning in r.get('warnings', [])]
 lines += ['', f"Correctness: {len(r['checks'])} API suites passed. Every measured write was received via watch, "
           'including previous-value and create-revision checks; final API values and revisions matched.', '',

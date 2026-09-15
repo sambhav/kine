@@ -54,7 +54,7 @@ jobs:
       - name: Build Kine and API benchmark
         if: steps.binary.outputs.cache-hit != 'true'
         run: |
-          go test ./pkg/logstructured ./pkg/drivers/generic ./pkg/drivers/pgsql
+          go test ./pkg/server ./pkg/logstructured ./pkg/drivers/generic ./pkg/drivers/pgsql
           go build -buildvcs=false -trimpath -o .kine-bench-bin/kine-bench ./hack/kine-bench
       - name: Save Go build cache before running tests
         if: steps.binary.outputs.cache-hit != 'true' && steps.go-cache.outputs.cache-hit != 'true'

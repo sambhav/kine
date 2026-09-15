@@ -241,26 +241,20 @@ func run() error {
 			if e = correctness(p.client, databaseURL(base, name)); e != nil {
 				return e
 			}
-			_, probeErr := measure(p.client, "put-probe", 8, 500)
-			if probeErr != nil {
-				warning := mode + ": " + probeErr.Error()
-				r.Warnings = append(r.Warnings, warning)
-				fmt.Println("KNOWN_PUT_ISSUE", warning)
+			if _, e = measure(p.client, "put-probe", 8, 500); e != nil {
+				return fmt.Errorf("concurrent Put regression: %w", e)
 			}
 			return nil
 		}()
 		if err != nil {
 			return fmt.Errorf("%s correctness: %w", mode, err)
 		}
-		r.Checks = append(r.Checks, mode+": CAS/stale/missing/delete/recreate/lease/watch/race/compaction/primary-key retry passed")
+		r.Checks = append(r.Checks, mode+": CAS/stale/missing/delete/recreate/lease/watch/race/compaction/primary-key retry/concurrent Put passed")
 		fmt.Println("CORRECTNESS", r.Checks[len(r.Checks)-1])
 		save()
 	}
 	for _, workload := range []string{"cas", "put", "mixed"} {
 		for _, concurrency := range clients {
-			if workload == "put" && concurrency > 1 {
-				continue
-			}
 			for trial := 0; trial < trials; trial++ {
 				modes := []string{"baseline", "atomic"}
 				if trial%2 == 1 {

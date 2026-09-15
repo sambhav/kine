@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"sort"
 	"sync"
 	"time"
 
@@ -200,6 +201,101 @@ func correctness(c *clientv3.Client, dsn string) error {
 	}
 	if !after.Succeeded {
 		return errors.New("update after compaction failed")
+	}
+	return putConflicts(ctx, c)
+}
+
+// Concurrent unconditional writes must each commit, and PrevKV must identify
+// the value actually replaced after any internal comparison retries.
+func putConflicts(ctx context.Context, c *clientv3.Client) error {
+	const key = "/checks/put-race"
+	const writes = 64
+	created, err := c.Put(ctx, key, "original")
+	if err != nil {
+		return err
+	}
+	wctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+	watch := c.Watch(wctx, key, clientv3.WithRev(created.Header.Revision+1), clientv3.WithPrevKV(), clientv3.WithCreatedNotify())
+	select {
+	case ready := <-watch:
+		if !ready.Created {
+			return fmt.Errorf("Put conflict watch not ready: %v", ready.Err())
+		}
+	case <-ctx.Done():
+		return ctx.Err()
+	}
+	type acknowledgement struct {
+		value    string
+		response *clientv3.PutResponse
+	}
+	outcomes := make(chan acknowledgement, writes)
+	errs := make(chan error, 8)
+	start := make(chan struct{})
+	var wg sync.WaitGroup
+	for worker := 0; worker < 8; worker++ {
+		wg.Add(1)
+		go func(worker int) {
+			defer wg.Done()
+			<-start
+			for i := worker; i < writes; i += 8 {
+				value := fmt.Sprintf("put-%d", i)
+				r, e := c.Put(ctx, key, value, clientv3.WithPrevKV())
+				if e != nil {
+					errs <- e
+					return
+				}
+				outcomes <- acknowledgement{value: value, response: r}
+			}
+		}(worker)
+	}
+	close(start)
+	wg.Wait()
+	close(errs)
+	close(outcomes)
+	for e := range errs {
+		return e
+	}
+	ordered := make([]acknowledgement, 0, writes)
+	for outcome := range outcomes {
+		ordered = append(ordered, outcome)
+	}
+	sort.Slice(ordered, func(i, j int) bool { return ordered[i].response.Header.Revision < ordered[j].response.Header.Revision })
+	previous, revision := "original", created.Header.Revision
+	for _, outcome := range ordered {
+		r := outcome.response
+		if r.Header.Revision <= revision || r.PrevKv == nil || string(r.PrevKv.Value) != previous || r.PrevKv.ModRevision != revision {
+			return fmt.Errorf("concurrent Put acknowledgement/PrevKV mismatch at revision %d", r.Header.Revision)
+		}
+		previous, revision = outcome.value, r.Header.Revision
+	}
+	seen := 0
+	for seen < writes {
+		select {
+		case response := <-watch:
+			if response.Err() != nil {
+				return response.Err()
+			}
+			for _, event := range response.Events {
+				if seen >= len(ordered) {
+					return errors.New("duplicate concurrent Put event")
+				}
+				want := ordered[seen]
+				if event.Type != clientv3.EventTypePut || string(event.Kv.Value) != want.value || event.Kv.ModRevision != want.response.Header.Revision || event.Kv.CreateRevision != created.Header.Revision || event.PrevKv == nil || string(event.PrevKv.Value) != string(want.response.PrevKv.Value) {
+					return errors.New("concurrent Put watch does not match acknowledgements")
+				}
+				seen++
+			}
+		case <-ctx.Done():
+			return fmt.Errorf("received %d/%d concurrent Put events: %w", seen, writes, ctx.Err())
+		}
+	}
+	final, err := c.Get(ctx, key)
+	if err != nil {
+		return err
+	}
+	if len(final.Kvs) != 1 || string(final.Kvs[0].Value) != previous || final.Kvs[0].ModRevision != revision {
+		return errors.New("concurrent Put final state mismatch")
 	}
 	return nil
 }

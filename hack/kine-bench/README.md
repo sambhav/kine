@@ -1,7 +1,7 @@
 # Actual Kine PostgreSQL benchmarks
 
 This runs the real Kine CLI/application in separate child processes and measures
-etcd v3 gRPC calls over TCP loopback. The baseline uses the unchanged update path;
+etcd v3 gRPC calls over TCP loopback. The baseline uses the original read/append update path;
 the candidate opts into conditional INSERT ... SELECT with
 `KINE_BENCH_ATOMIC_UPDATE=1`. Both use the same compiled binary and all seven
 indexes. The experiment is off by default.
@@ -50,8 +50,10 @@ RTT, TLS, shared database load, sustained checkpoints, and multiple Kine replica
 can change production results. This branch is an experiment, not a production
 release recommendation.
 
-Concurrent standalone Put is excluded from timed comparisons: the unchanged
-baseline acknowledged an update without advancing the revision in the first
-concurrent run. A separate eight-worker hot-key probe records the response
-revision and whether the requested value was actually stored. CAS transactions
-(the Kubernetes update form) and mixed GET/CAS remain the concurrent workloads.
+Both modes include the same ordinary Put correctness fix: read the current value
+and retry failed conditional updates or concurrent deletion. Earlier runs of
+the original Put handler could acknowledge values it had not stored, so their
+concurrent Put throughput was excluded. Concurrent Put is now measured only
+after the disjoint-key regression probe and same-key conflict checks pass.
+The optimization comparison isolates the atomic SQL update; it does not compare
+the fixed Put handler's speed against the buggy original handler.
