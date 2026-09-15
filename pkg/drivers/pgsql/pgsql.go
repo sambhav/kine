@@ -104,6 +104,16 @@ func New(ctx context.Context, wg *sync.WaitGroup, cfg *drivers.Config) (bool, se
 	}
 
 	dialect.GetSizeSQL = query.New(`SELECT pg_total_relation_size('kine')`, "$", true, "GetSize")
+	// Isolated experimental count rewrite, off unless explicitly benchmarked.
+	if os.Getenv("KINE_BENCH_DISTINCT_COUNT") == "1" {
+		current := `SELECT (%s), COUNT(*) FROM (%s) AS latest WHERE (deleted=0 OR ?)`
+		historical := `SELECT (%s), (%s), COUNT(*) FROM (%s) AS latest WHERE (deleted=0 OR ?)`
+		all := `SELECT DISTINCT ON (name) name,id,deleted FROM kine %s ORDER BY name,id DESC`
+		dialect.CountCurrentSQL = query.New(fmt.Sprintf(current, generic.CurrentRevSQL, fmt.Sprintf(distinctNameSQL, "")), "$", true, "CountCurrent")
+		dialect.CountAllCurrentSQL = query.New(fmt.Sprintf(current, generic.CurrentRevSQL, fmt.Sprintf(all, "")), "$", true, "CountAllCurrent")
+		dialect.CountRevisionSQL = query.New(fmt.Sprintf(historical, generic.CurrentRevSQL, generic.CompactRevSQL, fmt.Sprintf(distinctNameSQL, "AND id <= ?")), "$", true, "CountRevision")
+		dialect.CountAllRevisionSQL = query.New(fmt.Sprintf(historical, generic.CurrentRevSQL, generic.CompactRevSQL, fmt.Sprintf(all, "WHERE id <= ?")), "$", true, "CountAllRevision")
+	}
 	// Experimental benchmark opt-in; production defaults remain unchanged.
 	if os.Getenv("KINE_BENCH_ATOMIC_UPDATE") == "1" {
 		dialect.UpdateSQL = query.New(`

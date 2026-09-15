@@ -57,3 +57,36 @@ concurrent Put throughput was excluded. Concurrent Put is now measured only
 after the disjoint-key regression probe and same-key conflict checks pass.
 The optimization comparison isolates the atomic SQL update; it does not compare
 the fixed Put handler's speed against the buggy original handler.
+
+## Remaining experiments
+
+Push `[kine:experiments]` for quick screening or `[kine:experiments:full]` for
+three-trial comparisons. `Kine PostgreSQL experiments` runs three independent
+Actions jobs so comparisons within each suite share a runner:
+
+- **writes:** 32 concurrent RPCs, CAS / Put / mixed, original and atomic updates,
+  SQL pool limits 8/16/32/unlimited, and four/seven indexes. All configurations
+  pass API correctness checks. Every measured write is watched and verified;
+  WAL and database statistics are recorded around each trial.
+- **reads:** count, historical count and a 500-key paginated list, with the
+  experimental count rewrite off/on and four/seven indexes. Full fixtures have
+  20,000 keys × 15 versions. Fresh and vacuumed snapshots share the same seed;
+  table autovacuum is disabled only for this controlled visibility experiment.
+  Compaction comparisons verify both the stored compact revision and API state.
+- **churn:** live CAS writes and concurrent list/count requests. Table-default
+  maintenance is compared with eager vacuum/analyze thresholds, the count
+  rewrite, and four indexes. All variants keep autovacuum enabled and use a
+  common accelerated 1s launcher cadence. Full trials last at least 25 seconds;
+  this does not establish behavior at the PostgreSQL default 60s cadence.
+  Throughput includes repeated batch setup and verification, so compare it only
+  within this suite. Raw read latencies and per-batch watch checks are retained.
+
+Run locally on a dedicated PostgreSQL server using `KINE_BENCH_SUITE=writes`
+(or `reads` / `churn`) and `BENCH_PROFILE=quick` or `full`. The churn suite changes
+`autovacuum_naptime` on that disposable server. `experiments_summary.py` generates
+summary tables from `experiments-results.json`. The count rewrite is enabled only
+in explicitly selected variants through `KINE_BENCH_DISTINCT_COUNT=1`.
+
+The four-index fixture removes only `kine_name_index`, `kine_name_id_index`, and
+`kine_prev_revision_index` after Kine startup. Required uniqueness, primary key,
+list and id/deleted indexes remain. No production schema migration is applied.

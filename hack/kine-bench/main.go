@@ -33,7 +33,7 @@ type process struct {
 	log    *os.File
 }
 
-func startServer(dsn, mode, label string, compactRetain int) (*process, error) {
+func startServer(dsn, mode, label string, compactRetain int, extra ...string) (*process, error) {
 	listener, err := net.Listen("tcp", "127.0.0.1:0")
 	if err != nil {
 		return nil, err
@@ -49,9 +49,11 @@ func startServer(dsn, mode, label string, compactRetain int) (*process, error) {
 		return nil, err
 	}
 	p := &process{log: f, done: make(chan error, 1)}
-	p.cmd = exec.Command(exe, "serve", "--endpoint", dsn, "--listen-address", "http://"+address,
-		"--metrics-bind-address", "0", "--compact-min-retain", strconv.Itoa(compactRetain))
-	p.cmd.Env = append(os.Environ(), "KINE_BENCH_ATOMIC_UPDATE="+map[string]string{"baseline": "0", "atomic": "1"}[mode])
+	args := []string{"serve", "--endpoint", dsn, "--listen-address", "http://" + address,
+		"--metrics-bind-address", "0", "--compact-min-retain", strconv.Itoa(compactRetain)}
+	p.cmd = exec.Command(exe, append(args, extra...)...)
+	p.cmd.Env = append(os.Environ(), "KINE_BENCH_ATOMIC_UPDATE="+map[bool]string{false: "0", true: "1"}[strings.Contains(mode, "atomic")],
+		"KINE_BENCH_DISTINCT_COUNT="+map[bool]string{false: "0", true: "1"}[strings.Contains(mode, "count")])
 	p.cmd.Stdout, p.cmd.Stderr = f, f
 	if err = p.cmd.Start(); err != nil {
 		f.Close()
@@ -118,7 +120,7 @@ func databaseURL(base, name string) string {
 	return u.String()
 }
 
-func fixture(admin *sql.DB, base, name string, keys, versions int) error {
+func fixture(admin *sql.DB, base, name string, keys, versions int, fresh ...bool) error {
 	if err := mustExec(admin, "CREATE DATABASE "+name); err != nil {
 		return err
 	}
@@ -133,6 +135,14 @@ func fixture(admin *sql.DB, base, name string, keys, versions int) error {
 		return err
 	}
 	defer db.Close()
+	maintenance := "VACUUM (ANALYZE) kine"
+	if len(fresh) > 0 && fresh[0] {
+		// Controlled visibility experiment only. Live churn keeps autovacuum on.
+		if err = mustExec(db, "ALTER TABLE kine SET (autovacuum_enabled=false)"); err != nil {
+			return err
+		}
+		maintenance = "ANALYZE kine"
+	}
 	var head int64
 	if err = db.QueryRow("SELECT max(id) FROM kine").Scan(&head); err != nil {
 		return err
@@ -143,7 +153,7 @@ func fixture(admin *sql.DB, base, name string, keys, versions int) error {
 	 CASE WHEN v=1 THEN 0 ELSE %[1]d+(v-2)*%[2]d+k END,0,
 	 repeat('x',512)::bytea,CASE WHEN v=1 THEN NULL ELSE repeat('x',512)::bytea END
 	 FROM generate_series(1,%[3]d) v CROSS JOIN generate_series(1,%[2]d) k ORDER BY v,k`, head, keys, versions)
-	for _, q := range []string{query, "SELECT setval('kine_id_seq',(SELECT max(id) FROM kine))", "VACUUM (ANALYZE) kine", "CHECKPOINT"} {
+	for _, q := range []string{query, "SELECT setval('kine_id_seq',(SELECT max(id) FROM kine))", maintenance, "CHECKPOINT"} {
 		if err = mustExec(db, q); err != nil {
 			return err
 		}
@@ -196,6 +206,9 @@ func run() error {
 	profile := os.Getenv("BENCH_PROFILE")
 	if profile == "" {
 		profile = "quick"
+	}
+	if suite := os.Getenv("KINE_BENCH_SUITE"); suite != "" {
+		return experiments(admin, base, profile, suite, environment)
 	}
 	keys, versions, ops, trials, clients := 128, 3, 300, 3, []int{1, 8}
 	if profile == "full" {

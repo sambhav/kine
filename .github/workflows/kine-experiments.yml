@@ -1,4 +1,4 @@
-name: Kine PostgreSQL API benchmark
+name: Kine PostgreSQL experiments
 
 on:
   push:
@@ -15,17 +15,22 @@ permissions:
   contents: read
 
 concurrency:
-  group: kine-bench-${{ github.ref }}
+  group: kine-experiments-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   benchmark:
-    if: github.event_name == 'workflow_dispatch' || (contains(github.event.head_commit.message, '[kine') && !contains(github.event.head_commit.message, '[kine:experiments'))
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[kine:experiments')
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [writes, reads, churn]
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      BENCH_PROFILE: ${{ inputs.profile || (contains(github.event.head_commit.message, '[kine:full]') && 'full' || 'quick') }}
+      BENCH_PROFILE: ${{ inputs.profile || (contains(github.event.head_commit.message, '[kine:experiments:full]') && 'full' || 'quick') }}
       DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable
+      KINE_BENCH_SUITE: ${{ matrix.suite }}
       GOMAXPROCS: 4
       CGO_ENABLED: 0
     steps:
@@ -78,16 +83,16 @@ jobs:
       - name: Check API semantics and compare baseline with atomic updates
         run: .kine-bench-bin/kine-bench
       - name: Summarize actual Kine measurements
-        run: python3 hack/kine-bench/summary.py
+        if: always()
+        run: python3 hack/kine-bench/experiments_summary.py
       - name: Upload API measurements and Kine server logs
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: kine-postgres-${{ env.BENCH_PROFILE }}-${{ github.run_attempt }}
+          name: kine-experiments-${{ matrix.suite }}-${{ env.BENCH_PROFILE }}-${{ github.run_attempt }}
           path: |
-            kine-results.json
-            kine-summary.md
-            kine-machine.json
+            experiments-results.json
+            experiments-summary.md
             kine-bench-logs/
           retention-days: 14
           if-no-files-found: warn
