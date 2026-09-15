@@ -5,6 +5,7 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { execFileSync } from 'node:child_process';
 import {createFixture, extraIndexes} from './fixture.mjs';
+import {concurrentSuite} from './concurrent.mjs';
 
 const require = createRequire(process.env.BENCH_MODULE_ROOT
   ? path.join(process.env.BENCH_MODULE_ROOT, 'package.json') : import.meta.url);
@@ -38,7 +39,7 @@ async function exec(name, sql, args=[], explain=false) {
   assert.equal(prepared.get(name), sql);
   return q(`${explain ? 'EXPLAIN (ANALYZE, BUFFERS, WAL, FORMAT JSON) ' : ''}EXECUTE ${name}${args.length ? `(${args.map(literal).join(',')})` : ''}`);
 }
-const median = xs => [...xs].sort((a,b)=>a-b)[Math.floor(xs.length/2)];
+const median=xs=>{const s=[...xs].sort((a,b)=>a-b),m=Math.floor(s.length/2);return s.length%2?s[m]:(s[m-1]+s[m])/2;};
 const percentile = (xs,p) => [...xs].sort((a,b)=>a-b)[Math.min(xs.length-1,Math.ceil(xs.length*p)-1)];
 const results = {baseline_commit:'35f4319798cf3543e49f86c775a1f8c5c23b1e80',started:new Date().toISOString(),
   engine:process.env.DATABASE_URL?'native-postgresql':'pglite-wasm-memory',keys,versions,writeOps,repetitions,trials,profile:process.env.BENCH_PROFILE||'custom',commit:process.env.GITHUB_SHA||null,reads:[],writes:[],sizes:[],correctness:{comparisons:0},plans:{}};
@@ -229,6 +230,9 @@ await q(`INSERT INTO kine(name,created,deleted,create_revision,prev_revision,lea
 const tombstone=Number((await q(`SELECT max(id) AS id FROM kine WHERE name='/registry/write/00000001'`))[0].id);
 assert.equal(await mutation('atomic','/registry/write/00000001',tombstone,Buffer.from('deleted')),0);
 results.correctness.mutation_checks=7;
+if(process.env.DATABASE_URL && process.env.BENCH_PROFILE==='full') {
+ await concurrentSuite({Client:require('pg').Client,q,resetWrites,getSQL,insertSQL,atomicSQL,writeOps,report,results});
+}
 results.finished=new Date().toISOString();results.total_ms=performance.now()-benchmarkStart;save();
 console.log('All comparisons passed. Results: '+out);
 await q(`DROP SCHEMA kine_bench CASCADE`);

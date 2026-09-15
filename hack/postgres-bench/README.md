@@ -17,7 +17,7 @@ cache without another code change.
 
 | Profile | Revision rows | Updates per variant | Read samples |
 | --- | ---: | ---: | ---: |
-| quick | 30,001 | 300 × 2 trials | 3 |
+| quick | 30,001 | 300 × 3 trials | 3 |
 | full | 300,001 | 5,000 × 5 trials | 9 |
 
 The workflow uses PostgreSQL already installed on Ubuntu 24.04; there is no image
@@ -27,11 +27,14 @@ WAL bytes, fixture setup time, and correctness checks. Artifacts contain every
 trial, query plans, and runner details. Queue/runner provisioning time is outside
 the benchmark and cannot be guaranteed to fit a one-minute budget.
 
-Node dependencies are cached by lockfile. The immutable initial fixture is a
-compressed `pg_dump` archive cached by PostgreSQL major, profile, and the fixture
+Node dependencies are cached by lockfile. Quick runs regenerate the 30,001-row fixture: measured generation and restore
+both took about 0.6 s, so skipping cache download is faster. For full runs, the
+immutable initial fixture is a compressed `pg_dump` archive cached by PostgreSQL major, profile, and the fixture
 source hash. A cache miss generates it; a hit restores it and refreshes planner
 statistics. Never cache a running PGDATA directory. Measured writes always start
 from reset fixtures; cache entries never contain a prior trial's mutated state.
+Logical restore rebuilds indexes, so compare candidates within each run rather
+than treating absolute timings from generated/restored layouts as interchangeable.
 The JSON records generation/restoration and snapshot time separately. GitHub
 cache scope and eviction can cause misses; every run works without the cache.
 
@@ -91,10 +94,16 @@ behavior. It must not be reported as production PostgreSQL or Kine throughput.
   per variant, alternating execution order and rebuilding identical fixtures.
   Each update autocommits. Record elapsed throughput, per-operation percentiles,
   WAL insert-position deltas, and compare a checksum of every resulting row.
+- Full native runs also measure 8 and 32 clients, each owning disjoint keys, with
+  three trials per variant and client count. These use the pg driver's named
+  prepared statements; single-client measurements use SQL PREPARE/EXECUTE.
+  Compare candidates within the same client count/protocol.
+- Four lock-barrier CAS races (both modes and both index sets) require exactly one
+  winner among eight contenders. Each concurrent trial validates every stored
+  revision link, old value, create revision, and total number of updates.
 - The atomic prototype retains the uniqueness constraint and verifies failed
-  revisions, absent/deleted keys and old values. Concurrent CAS conflicts,
-  transaction failure responses, compaction races, and revision-gap behavior
-  still require native multi-session tests before production adoption.
+  revisions and absent/deleted keys. Kine's retry/error mapping, compaction races,
+  watches, and revision-gap behavior need end-to-end tests before adoption.
 - Autovacuum is disabled only on the disposable fixture table so background
   vacuum cannot contaminate the explicit fresh-versus-vacuumed comparison.
 - Parallel query execution is disabled identically; work_mem is 64 MB. Native

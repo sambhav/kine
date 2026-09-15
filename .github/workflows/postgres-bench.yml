@@ -41,7 +41,7 @@ jobs:
             echo 'BENCH_KEYS=2000' >> "$GITHUB_ENV"
             echo 'BENCH_WRITE_OPS=300' >> "$GITHUB_ENV"
             echo 'BENCH_REPETITIONS=3' >> "$GITHUB_ENV"
-            echo 'BENCH_TRIALS=2' >> "$GITHUB_ENV"
+            echo 'BENCH_TRIALS=3' >> "$GITHUB_ENV"
           fi
           echo 'BENCH_VERSIONS=15' >> "$GITHUB_ENV"
           echo "PG_MAJOR=$(pg_config --version | sed -E 's/PostgreSQL ([0-9]+).*/\1/')" >> "$GITHUB_ENV"
@@ -59,6 +59,7 @@ jobs:
         run: npm ci --ignore-scripts --omit=optional --no-audit --no-fund
 
       - name: Restore seed fixture
+        if: env.BENCH_PROFILE == 'full'
         uses: actions/cache@caa296126883cff596d87d8935842f9db880ef25 # v5
         with:
           path: .bench-fixtures
@@ -72,7 +73,11 @@ jobs:
           pg_isready
 
       - name: Benchmark baseline and candidates
-        run: node hack/postgres-bench/benchmark.mjs
+        run: |
+          if [[ "$BENCH_PROFILE" == quick ]]; then
+            unset BENCH_FIXTURE_CACHE
+          fi
+          node hack/postgres-bench/benchmark.mjs
 
       - name: Summarize measurements
         run: node hack/postgres-bench/summary.mjs benchmark-results.json
