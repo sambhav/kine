@@ -32,7 +32,7 @@ for (workload, clients), modes in groups.items():
 lines += ['', 'Both modes include the same ordinary Put correctness fix: read current state and retry failed updates. '
           'Baseline retains the original read/append update path; atomic uses conditional INSERT ... SELECT. '
           'Concurrent Put and same-key Put conflicts are required correctness checks.']
-lines += ['- ' + warning for warning in r.get('warnings', [])]
+lines += ['- ' + warning for warning in (r.get('warnings') or [])]
 lines += ['', f"Correctness: {len(r['checks'])} API suites passed. Every measured write was received via watch, "
           'including previous-value and create-revision checks; final API values and revisions matched.', '',
           'Loopback and shared-runner measurements; these exclude Kubernetes apiserver overhead and production network latency.']
@@ -48,4 +48,4 @@ machine = {'cpu': cpu, 'cpus': os.cpu_count(), 'kernel': platform.release(),
 Path('kine-machine.json').write_text(json.dumps(machine, indent=2))
 print(text)
 print('KINE_RESULT ' + json.dumps({'profile': r['profile'], 'seconds': r['seconds'], 'summary': summary,
-                                   'checks': r['checks'], 'warnings': r.get('warnings', []), 'machine': machine}))
+                                   'checks': r['checks'], 'warnings': r.get('warnings') or [], 'machine': machine}))
