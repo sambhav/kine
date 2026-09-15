@@ -27,6 +27,7 @@ type results struct {
 	Trials       int               `json:"trials"`
 	Seconds      float64           `json:"seconds"`
 	Checks       []string          `json:"checks"`
+	Warnings     []string          `json:"warnings"`
 	Rows         []sample          `json:"rows"`
 }
 
@@ -74,9 +75,13 @@ func measure(c *clientv3.Client, workload string, concurrency, ops int) (sample,
 	if len(initial.Kvs) < concurrency {
 		return sample{}, fmt.Errorf("only %d initial keys", len(initial.Kvs))
 	}
-	keys, revs, creates := make([]string, concurrency), make([]int64, concurrency), make([]int64, concurrency)
-	last, expected := map[string][]byte{}, make([][]byte, concurrency)
-	for i := 0; i < concurrency; i++ {
+	if workload == "put-probe" {
+		initial.Kvs = initial.Kvs[:concurrency]
+	}
+	keyCount := len(initial.Kvs)
+	keys, revs, creates := make([]string, keyCount), make([]int64, keyCount), make([]int64, keyCount)
+	last, expected := map[string][]byte{}, make([][]byte, keyCount)
+	for i := 0; i < keyCount; i++ {
 		kv := initial.Kvs[i]
 		keys[i] = string(kv.Key)
 		revs[i] = kv.ModRevision
@@ -84,7 +89,12 @@ func measure(c *clientv3.Client, workload string, concurrency, ops int) (sample,
 		last[keys[i]] = kv.Value
 		expected[i] = kv.Value
 	}
-	// Warm each key without modifying the identical database fixture.
+	keyIndex := func(id int) int {
+		worker := id % concurrency
+		owned := (keyCount - worker + concurrency - 1) / concurrency
+		return worker + ((id/concurrency)%owned)*concurrency
+	}
+	// Warm connections without modifying the identical database fixture.
 	for i := 0; i < concurrency; i++ {
 		if _, err = c.Get(ctx, keys[i]); err != nil {
 			return sample{}, err
@@ -131,7 +141,7 @@ func measure(c *clientv3.Client, workload string, concurrency, ops int) (sample,
 					return
 				}
 				key := string(event.Kv.Key)
-				if event.PrevKv == nil || !bytes.Equal(event.PrevKv.Value, last[key]) || event.Kv.CreateRevision != creates[id%concurrency] {
+				if event.PrevKv == nil || !bytes.Equal(event.PrevKv.Value, last[key]) || event.Kv.CreateRevision != creates[keyIndex(id)] || key != keys[keyIndex(id)] {
 					watchDone <- fmt.Errorf("watch old value/create revision mismatch")
 					return
 				}
@@ -154,31 +164,32 @@ func measure(c *clientv3.Client, workload string, concurrency, ops int) (sample,
 		go func(worker int) {
 			defer wg.Done()
 			for i := worker; i < ops; i += concurrency {
+				k := keyIndex(i)
 				value := bytes.Repeat([]byte{'b'}, 512)
 				binary.LittleEndian.PutUint64(value[:8], uint64(i+1))
 				t := time.Now()
 				starts[i].Store(t.UnixNano())
 				if !isWrite(i) {
-					response, e := c.Get(ctx, keys[worker])
+					response, e := c.Get(ctx, keys[k])
 					if e != nil {
 						errors <- e
 						return
 					}
-					if len(response.Kvs) != 1 || !bytes.Equal(response.Kvs[0].Value, expected[worker]) || response.Kvs[0].ModRevision != revs[worker] {
+					if len(response.Kvs) != 1 || !bytes.Equal(response.Kvs[0].Value, expected[k]) || response.Kvs[0].ModRevision != revs[k] {
 						errors <- fmt.Errorf("mixed read mismatch")
 						return
 					}
 				} else {
 					var rev int64
-					if workload == "put" {
-						response, e := c.Put(ctx, keys[worker], string(value))
+					if workload == "put" || workload == "put-probe" {
+						response, e := c.Put(ctx, keys[k], string(value))
 						if e != nil {
 							errors <- e
 							return
 						}
 						rev = response.Header.Revision
 					} else {
-						response, e := cas(ctx, c, keys[worker], revs[worker], string(value))
+						response, e := cas(ctx, c, keys[k], revs[k], string(value))
 						if e != nil {
 							errors <- e
 							return
@@ -189,12 +200,21 @@ func measure(c *clientv3.Client, workload string, concurrency, ops int) (sample,
 						}
 						rev = response.Header.Revision
 					}
-					if rev <= revs[worker] {
-						errors <- fmt.Errorf("revision did not advance")
+					if rev <= revs[k] {
+						current, readErr := c.Get(ctx, keys[k])
+						if readErr != nil {
+							errors <- readErr
+							return
+						}
+						if len(current.Kvs) != 1 {
+							errors <- fmt.Errorf("missing key after acknowledgement")
+							return
+						}
+						errors <- fmt.Errorf("acknowledged %s did not advance: key=%s previous=%d response=%d stored=%d requested_value_stored=%t", workload, keys[k], revs[k], rev, current.Kvs[0].ModRevision, bytes.Equal(current.Kvs[0].Value, value))
 						return
 					}
-					revs[worker] = rev
-					expected[worker] = value
+					revs[k] = rev
+					expected[k] = value
 				}
 				latencies[i] = float64(time.Since(t)) / 1e6
 			}
@@ -217,14 +237,20 @@ func measure(c *clientv3.Client, workload string, concurrency, ops int) (sample,
 		return sample{}, fmt.Errorf("watch did not deliver %d writes", writes)
 	}
 	watchComplete := time.Since(start).Seconds()
-	for i, key := range keys {
-		response, e := c.Get(ctx, key)
-		if e != nil {
-			return sample{}, e
+	final, e := c.Get(ctx, prefix, clientv3.WithPrefix())
+	if e != nil {
+		return sample{}, e
+	}
+	for i, kv := range final.Kvs {
+		if i >= keyCount {
+			break
 		}
-		if len(response.Kvs) != 1 || !bytes.Equal(response.Kvs[0].Value, expected[i]) || response.Kvs[0].ModRevision != revs[i] || response.Kvs[0].CreateRevision != creates[i] {
+		if string(kv.Key) != keys[i] || !bytes.Equal(kv.Value, expected[i]) || kv.ModRevision != revs[i] || kv.CreateRevision != creates[i] {
 			return sample{}, fmt.Errorf("final API state mismatch")
 		}
+	}
+	if len(final.Kvs) < keyCount {
+		return sample{}, fmt.Errorf("final keys missing")
 	}
 	return sample{Workload: workload, Clients: concurrency, Ops: ops, Writes: writes, OpsPerSecond: float64(ops) / elapsed.Seconds(), Seconds: elapsed.Seconds(),
 		WatchCompleteSeconds: watchComplete, P50: quantile(latencies, .5), P95: quantile(latencies, .95), P99: quantile(latencies, .99), WatchP95: quantile(watchLatencies, .95), WatchEvents: len(watchLatencies)}, nil

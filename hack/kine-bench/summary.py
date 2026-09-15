@@ -29,6 +29,8 @@ for (workload, clients), modes in groups.items():
     lines.append(f"| {workload} | {clients} | {base['ops_per_second']:.0f} | {candidate['ops_per_second']:.0f} | "
                  f"{row['speedup']:.2f}× | {base['p95_ms']:.3f} | {candidate['p95_ms']:.3f} | "
                  f"{base['watch_p95_ms']:.3f} | {candidate['watch_p95_ms']:.3f} |")
+lines += ['', 'Concurrent standalone Put is excluded: an earlier baseline run acknowledged a write without advancing its revision. The hot-key diagnostic is recorded separately.']
+lines += ['- ' + warning for warning in r.get('warnings', [])]
 lines += ['', f"Correctness: {len(r['checks'])} API suites passed. Every measured write was received via watch, "
           'including previous-value and create-revision checks; final API values and revisions matched.', '',
           'Loopback and shared-runner measurements; these exclude Kubernetes apiserver overhead and production network latency.']
@@ -44,4 +46,4 @@ machine = {'cpu': cpu, 'cpus': os.cpu_count(), 'kernel': platform.release(),
 Path('kine-machine.json').write_text(json.dumps(machine, indent=2))
 print(text)
 print('KINE_RESULT ' + json.dumps({'profile': r['profile'], 'seconds': r['seconds'], 'summary': summary,
-                                   'checks': r['checks'], 'machine': machine}))
+                                   'checks': r['checks'], 'warnings': r.get('warnings', []), 'machine': machine}))
