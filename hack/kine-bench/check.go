@@ -79,7 +79,7 @@ func correctness(c *clientv3.Client, dsn string) error {
 	if missing.Succeeded || len(missing.Responses[0].GetResponseRange().Kvs) != 0 {
 		return errors.New("missing CAS mismatch")
 	}
-	if _, err = c.Delete(ctx, key); err != nil {
+	if _, err = c.Txn(ctx).If(clientv3.Compare(clientv3.ModRevision(key), "=", update.Header.Revision)).Then(clientv3.OpDelete(key)).Else(clientv3.OpGet(key)).Commit(); err != nil {
 		return err
 	}
 	deleted, err := cas(ctx, c, key, update.Header.Revision, "deleted")
