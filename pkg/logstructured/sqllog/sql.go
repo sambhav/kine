@@ -725,6 +725,24 @@ func (s *SQLLog) Append(ctx context.Context, event *server.Event) (int64, error)
 	return rev, nil
 }
 
+func (s *SQLLog) TryUpdate(ctx context.Context, key string, value []byte, revision, lease int64) (*server.KeyValue, bool, error) {
+	u, ok := s.d.(server.AtomicUpdater)
+	if !ok {
+		return nil, false, nil
+	}
+	currentRev := s.currentRev.Load()
+	kv, supported, err := u.TryUpdate(ctx, key, value, revision, lease)
+	if err == nil && kv != nil {
+		// Match Append's polling notification and revision-cache update.
+		select {
+		case s.notify <- kv.ModRevision:
+		default:
+		}
+		s.currentRev.CompareAndSwap(currentRev, kv.ModRevision)
+	}
+	return kv, supported, err
+}
+
 // scan scans the current row's columns into a server.Event struct.
 // If a valid event is scanned, the passed rev and compact vars are also updated.
 func scan(rows *sql.Rows, rev *int64, compact *int64, val, prev bool) (*server.Event, error) {

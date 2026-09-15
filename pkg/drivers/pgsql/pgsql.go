@@ -104,6 +104,15 @@ func New(ctx context.Context, wg *sync.WaitGroup, cfg *drivers.Config) (bool, se
 	}
 
 	dialect.GetSizeSQL = query.New(`SELECT pg_total_relation_size('kine')`, "$", true, "GetSize")
+	// Experimental benchmark opt-in; production defaults remain unchanged.
+	if os.Getenv("KINE_BENCH_ATOMIC_UPDATE") == "1" {
+		dialect.UpdateSQL = query.New(`
+			INSERT INTO kine(name, created, deleted, create_revision, prev_revision, lease, value, old_value)
+			SELECT name, 0, 0, CASE WHEN created = 1 THEN id ELSE create_revision END, id, $3, $4, value
+			FROM (SELECT * FROM kine WHERE name = $1 ORDER BY id DESC LIMIT 1) AS latest
+			WHERE id = $2 AND deleted = 0
+			RETURNING id, create_revision`, "$", true, "AtomicUpdate")
+	}
 	dialect.CompactSQL = query.New(`
 		DELETE FROM kine AS kv
 		USING	(

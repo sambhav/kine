@@ -94,6 +94,7 @@ type Generic struct {
 	UpdateCompactSQL        *query.Named
 	PostCompactSQL          *query.Named
 	InsertSQL               *query.Named
+	UpdateSQL               *query.Named
 	FillSQL                 *query.Named
 	InsertLastInsertIDSQL   *query.Named
 	GetSizeSQL              *query.Named

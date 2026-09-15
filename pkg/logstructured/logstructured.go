@@ -187,6 +187,22 @@ func (l *LogStructured) Update(ctx context.Context, key string, value []byte, re
 		}
 	}()
 
+	if u, ok := l.log.(server.AtomicUpdater); ok {
+		kv, supported, err := u.TryUpdate(ctx, key, value, revision, lease)
+		if supported {
+			if err == nil && kv != nil {
+				return kv.ModRevision, kv, true, nil
+			}
+			// Match the existing failed-append path: return the latest visible
+			// value and comparison failure, or the read error if it cannot be read.
+			rev, event, err := l.get(ctx, key, 0, false, false)
+			if event == nil {
+				return rev, nil, false, err
+			}
+			return rev, event.KV, false, err
+		}
+	}
+
 	rev, event, err := l.get(ctx, key, 0, false, false)
 	if err != nil {
 		return 0, nil, false, err

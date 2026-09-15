@@ -63,6 +63,13 @@ type Dialect interface {
 	TranslateStartKey(startKey string) string
 }
 
+// AtomicUpdater is an optional successful-CAS fast path. supported is false
+// when the implementation should use the normal read/append path. A nil KV
+// with supported=true means that the comparison did not succeed.
+type AtomicUpdater interface {
+	TryUpdate(ctx context.Context, key string, value []byte, revision, lease int64) (kv *KeyValue, supported bool, err error)
+}
+
 type Transaction interface {
 	Commit() error
 	MustCommit()
