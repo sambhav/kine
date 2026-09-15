@@ -113,7 +113,7 @@ behavior. It must not be reported as production PostgreSQL or Kine throughput.
 Configuration: `BENCH_KEYS`, `BENCH_VERSIONS` (use 15 for the standard fixture),
 `BENCH_WRITE_OPS`, `BENCH_REPETITIONS`, `BENCH_TRIALS`, and `BENCH_OUTPUT`.
 `BENCH_FIXTURE_CACHE` enables dump caching on native PostgreSQL (requires matching
-`pg_dump`/`pg_restore` clients); `BENCH_PROFILE` labels the results.
+`pg_dump`/`pg_restore` clients); `BENCH_PROFILE` labels the results; `full` also enables native concurrent tests.
 Set `BENCH_PHASE=fresh-four` for the supplemental read-only experiment on
 freshly written data with four indexes, before vacuum changes visibility.
 
