@@ -15,7 +15,6 @@ func (l *LimitedServer) Put(ctx context.Context, r *etcdserverpb.PutRequest) (*e
 		return nil, unsupported("ignoreLease")
 	}
 
-	var kv *KeyValue
 	// redirect apiserver get to the substitute compact revision key
 	// response is fixed up in toKV()
 	if bytes.Equal(r.Key, compactRevKey) {
@@ -23,20 +22,41 @@ func (l *LimitedServer) Put(ctx context.Context, r *etcdserverpb.PutRequest) (*e
 	}
 
 	key := string(r.Key)
-	rev, err := l.backend.Create(ctx, key, r.Value, r.Lease)
-	if err == ErrKeyExists {
-		rev, kv, err = l.backend.Get(ctx, key, rev, false)
+	for {
+		if err := ctx.Err(); err != nil {
+			return nil, err
+		}
+		var kv *KeyValue
+		rev, err := l.backend.Create(ctx, key, r.Value, r.Lease)
+		if err == ErrKeyExists {
+			// A failed Create can return a cached revision. Read the current
+			// value so an unconditional Put does not compare against old state.
+			_, kv, err = l.backend.Get(ctx, key, 0, false)
+			if err != nil {
+				return nil, err
+			}
+			if kv == nil {
+				// The key was deleted after Create; try creating it again.
+				continue
+			}
+			var updated bool
+			rev, _, updated, err = l.backend.Update(ctx, key, r.Value, kv.ModRevision, r.Lease)
+			if err == nil && !updated {
+				// Another writer won the comparison. Put must retry instead of
+				// acknowledging a value that was never stored.
+				continue
+			}
+		}
 		if err != nil {
 			return nil, err
 		}
-		rev, _, _, err = l.backend.Update(ctx, key, r.Value, kv.ModRevision, r.Lease)
 		if !r.PrevKv {
 			kv = nil
 		}
-	}
 
-	return &etcdserverpb.PutResponse{
-		Header: &etcdserverpb.ResponseHeader{Revision: rev},
-		PrevKv: toKV(kv),
-	}, err
+		return &etcdserverpb.PutResponse{
+			Header: &etcdserverpb.ResponseHeader{Revision: rev},
+			PrevKv: toKV(kv),
+		}, nil
+	}
 }
