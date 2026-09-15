@@ -61,7 +61,7 @@ func (e *experiment) readExperiments() error {
 				if err := e.trial(v, phase, trial, func(p *process, db *sql.DB) (map[string]any, error) {
 					ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
 					defer cancel()
-					if err := countChecks(p.client); err != nil {
+					if err := countChecks(p.client, db); err != nil {
 						return nil, err
 					}
 					var head int64

@@ -184,7 +184,7 @@ func (e *experiment) writeExperiments() error {
 			if err := correctness(p.client, databaseURL(e.base, e.seed+"_trial")); err != nil {
 				return nil, err
 			}
-			if err := countChecks(p.client); err != nil {
+			if err := countChecks(p.client, db); err != nil {
 				return nil, err
 			}
 			return map[string]any{"kind": "correctness", "passed": true}, nil
@@ -209,7 +209,7 @@ func (e *experiment) writeExperiments() error {
 	return e.save()
 }
 
-func countChecks(c *clientv3.Client) error {
+func countChecks(c *clientv3.Client, db *sql.DB) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
 	const key = "/count-check/key"
@@ -239,16 +239,19 @@ func countChecks(c *clientv3.Client) error {
 	}
 	for _, revision := range []int64{0, rev} {
 		opts := []clientv3.OpOption{clientv3.WithFromKey(), clientv3.WithRev(revision), clientv3.WithKeysOnly()}
-		list, err := c.Get(ctx, "\x00", opts...)
-		if err != nil {
+		// The baseline full-keyspace list returns an empty result. Compare
+		// all-key counts against the original grouped revision-log query.
+		var expected int64
+		if err := db.QueryRowContext(ctx, `SELECT count(*) FROM kine WHERE deleted=0 AND id IN
+          (SELECT max(id) FROM kine WHERE ($1::bigint=0 OR id<=$1) GROUP BY name)`, revision).Scan(&expected); err != nil {
 			return err
 		}
 		count, err := c.Get(ctx, "\x00", append(opts, clientv3.WithCountOnly())...)
 		if err != nil {
 			return err
 		}
-		if count.Count != int64(len(list.Kvs)) {
-			return fmt.Errorf("all-key count mismatch %d/%d", count.Count, len(list.Kvs))
+		if count.Count != expected {
+			return fmt.Errorf("all-key count mismatch %d/%d", count.Count, expected)
 		}
 	}
 	return nil
