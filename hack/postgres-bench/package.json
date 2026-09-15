@@ -1,0 +1,8 @@
+{
+  "name": "kine-postgres-bench",
+  "private": true,
+  "type": "module",
+  "scripts": {"bench": "node benchmark.mjs"},
+  "dependencies": {"pg": "8.23.0"},
+  "optionalDependencies": {"@electric-sql/pglite": "0.5.8"}
+}
