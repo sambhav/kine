@@ -183,6 +183,17 @@ func (e *experiment) writeExperiments() error {
 		variants = append(variants, variant{Name: "baseline-pool8", Mode: "baseline", Pool: 8, Indexes: 7},
 			variant{Name: "pool8-four-indexes", Mode: "atomic", Pool: 8, Indexes: 4})
 	}
+	if os.Getenv("KINE_BENCH_FOCUS") == "pool16" {
+		e.environment["focus"] = "pool16 confirmation"
+		variants = []variant{
+			{Name: "baseline", Mode: "baseline", Indexes: 7},
+			{Name: "baseline-pool16", Mode: "baseline", Pool: 16, Indexes: 7},
+			{Name: "atomic", Mode: "atomic", Indexes: 7},
+			{Name: "pool8", Mode: "atomic", Pool: 8, Indexes: 7},
+			{Name: "pool16", Mode: "atomic", Pool: 16, Indexes: 7},
+			{Name: "pool16-four-indexes", Mode: "atomic", Pool: 16, Indexes: 4},
+		}
+	}
 	for _, v := range variants {
 		if err := e.trial(v, "checks", 0, func(p *process, db *sql.DB) (map[string]any, error) {
 			if err := correctness(p.client, databaseURL(e.base, e.seed+"_trial")); err != nil {

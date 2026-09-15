@@ -15,7 +15,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: kine-experiments-${{ github.ref }}
+  group: kine-experiments-${{ github.ref }}-${{ contains(github.event.head_commit.message, '[kine:experiments:confirm]') }}
   cancel-in-progress: false
 
 jobs:
@@ -24,13 +24,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [writes, reads, churn]
+        suite: ${{ fromJSON(contains(github.event.head_commit.message, '[kine:experiments:confirm]') && '["writes"]' || '["writes", "reads", "churn"]') }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     env:
-      BENCH_PROFILE: ${{ inputs.profile || (contains(github.event.head_commit.message, '[kine:experiments:full]') && 'full' || 'quick') }}
+      BENCH_PROFILE: ${{ inputs.profile || ((contains(github.event.head_commit.message, '[kine:experiments:full]') || contains(github.event.head_commit.message, '[kine:experiments:confirm]')) && 'full' || 'quick') }}
       DATABASE_URL: postgres://postgres:postgres@127.0.0.1:5432/postgres?sslmode=disable
       KINE_BENCH_SUITE: ${{ matrix.suite }}
+      KINE_BENCH_FOCUS: ${{ contains(github.event.head_commit.message, '[kine:experiments:confirm]') && 'pool16' || '' }}
       GOMAXPROCS: 4
       CGO_ENABLED: 0
     steps:
